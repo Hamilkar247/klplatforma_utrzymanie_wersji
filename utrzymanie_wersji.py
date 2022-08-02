@@ -60,19 +60,19 @@ if __name__ == "__main__":
 ##
 ##exec(compile(open(activate_this_file, "rb").read(), activate_this_file, 'exec'), dict(__file__=activate_this_file))
 
-            if os.path.isdir("venv") == True:
-                bash_command="source venv/bin/activate".split()
-                process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                stdout, stderr = process.communicate()
-                drukuj(f"stdout: {stdout}") 
-                drukuj(f"stderr: {stderr}")
+            # if os.path.isdir("venv") == True:
+            #     bash_command="source venv/bin/activate".split()
+            #     process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            #     stdout, stderr = process.communicate()
+            #     drukuj(f"stdout: {stdout}") 
+            #     drukuj(f"stderr: {stderr}")
 
-                if os.path.exists("requirements.txt") == True:
-                    bash_command="pip3 install -r requirements.txt".split()
-                    process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    stdout, stderr = process.communicate()
-                    drukuj(f"stdout: {stdout}") 
-                    drukuj(f"stderr: {stderr}")
+            #     if os.path.exists("requirements.txt") == True:
+            #         bash_command="pip3 install -r requirements.txt".split()
+            #         process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            #         stdout, stderr = process.communicate()
+            #         drukuj(f"stdout: {stdout}") 
+            #         drukuj(f"stderr: {stderr}")
     else:
         drukuj("hash się nie zmienił")
 
