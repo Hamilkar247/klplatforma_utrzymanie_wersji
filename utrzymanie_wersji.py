@@ -55,6 +55,17 @@ if __name__ == "__main__":
             drukuj(f"stdout: {stdout}") 
             drukuj(f"stderr: {stderr}")
 
+            #bash_command="git log -n 1 --oneline $(git branch -r)".split()
+            #process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            #stdout, stderr = process.communicate()
+            #drukuj(f"stdout: {stdout}")
+            #drukuj(f"stderr: {stderr}")
+            #if stdout != "":
+            #    file_commit=open("commit.txt", "w")
+            #    file_commit.write(f"{stdout}")
+            #else:
+            #    drukuj("brak strumienia wyjściowego")
+
 #https://stackoverflow.com/a/54636170/13231758
 ##     activate_this_file = "/path/to/virtualenv/bin/activate_this.py"
 ##
