@@ -106,7 +106,7 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
     path_to_tymczasowy_miejsce_pobranego_programu=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master"
     if os.path.isdir(path_to_tymczasowy_miejsce_pobranego_programu):
         shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_skryptu_klraspi}/skrypty_klraspi")
-        shutil.remove(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
+        shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
         os.remove(f"{basic_path_ram}/skrypty_klraspi.zip")
         tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi)
         przekopiuj_stary_env()
