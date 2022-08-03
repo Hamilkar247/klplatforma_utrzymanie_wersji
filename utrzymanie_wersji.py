@@ -114,6 +114,9 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
     else:
         drukuj("nie udalo sie przeniesc pliku - chyba kwestia - bo może nie ma")
 
+class ExceptionEnvProjektu(Exception):
+    pass
+
 if __name__ == "__main__":
     basic_path_ram=""
     basic_path_skryptu_klraspi=""
@@ -126,7 +129,14 @@ if __name__ == "__main__":
             if os.name == "posix":
                 drukuj("posix")
                 basic_path_ram=os.getenv("basic_path_ram")
+                if os.path.isdir(basic_path_ram) == False:
+                    raise ExceptionEnvProjektu
                 basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
+                #ciekawostka podwojny isdir - powinnnniec dzialac to jak 
+                head, tail = os.path.split(basic_path_skryptu_klraspi)
+                if os.path.isdir(head) == False:
+                    drukuj(f"head: {head}")
+                    raise ExceptionEnvProjektu
                 #pobierz_aktualna_wersje()
                 obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
                 obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
@@ -157,7 +167,11 @@ if __name__ == "__main__":
                 drukuj("proces zakonczony")
         else:
             drukuj("No byniu - a .env_projektu to nie laska zrobic?!")
-            
+    
+    except ExceptionEnvProjektu as e:
+        drukuj(f"exception {e}")
+        drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
+        traceback.print_exc()
     except Exception as e:
         drukuj(f"exception {e}")
         drukuj(f"sprawdz czy .env widziany jest menadzer zadan/crontab")
