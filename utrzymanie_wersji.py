@@ -113,15 +113,20 @@ if __name__ == "__main__":
                 obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
                 obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
                 if obecny_projekt==obecny_na_outsystem:
-                    drukuj("mamy zbieznosc ;)")
+                    drukuj("mamy zbieznosc ;) - nic nie robie")
                 elif obecny_projekt=="brak pliku":
+                    drukuj("brak pliku")
                     pobierz_aktualna_wersje(basic_path_ram)
+                    drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                 else:
+                    drukuj("rozpoczynam pobieranie z repa")
                     #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
                     text=pobierz_aktualna_wersje(basic_path_ram)
                     if text != "":
                         zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
                         przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
+                        drukuj("przekopiowalem stary env")
+                    drukuj("koniec elsa")
                 #drukuj(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
                 #drukuj(f"pobierz_aktualna_wersje: {pobierz_aktualna_wersje()}")
                 #if pobierz_z_outsystemu_hash() == pobierz_aktualna_wersje():
