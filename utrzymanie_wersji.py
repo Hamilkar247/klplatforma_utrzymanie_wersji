@@ -31,6 +31,7 @@ def przerwij_i_wyswietl_czas():
     sys.exit()
 
 def pobierz_z_outsystemu_date_wersji():
+    drukuj("def: pobierz_z_outsystemu_date_wersji")
     url_wersji_programu=os.getenv("url_wersja_programu")
     content_new=[]
     data=""
@@ -54,6 +55,7 @@ def pobierz_z_outsystemu_date_wersji():
     #return "03/08/22 12:07:09"
 
 def pobierz_aktualna_wersje(spodziewana_data_wersji, basic_path_projektu, basic_path_ram):
+    drukuj("def: pobierz_aktualna_wersje")
     url_zip_code_repo=os.getenv("url_zip_code_repo")
     urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/skrypty_klraspi.zip")
     with zipfile.ZipFile(f"{basic_path_ram}/skrypty_klraspi.zip", "r") as zip_ref:
@@ -71,6 +73,7 @@ def pobierz_aktualna_wersje(spodziewana_data_wersji, basic_path_projektu, basic_
     return ""
 
 def zwroc_stan_projektu(basic_path_skryptu_klraspi):
+    drukuj("def: zwroc_stan_projektu")
     scieszka_do_pliku_commit=f"{basic_path_skryptu_klraspi}/commit.txt"
     if os.path.exists(scieszka_do_pliku_commit):
         file=open(scieszka_do_pliku_commit, "r")
@@ -81,10 +84,12 @@ def zwroc_stan_projektu(basic_path_skryptu_klraspi):
     return data
 
 def przekopiuj_stary_env(basic_path_skryptu_klraspi):
+    drukuj("def: przekopiuj_stary_env")
     if os.path.exists(".env_skopiowany"):
         shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
 
 def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
+    drukuj("def: tworzenie_virtualenv_dla_projektu")
     bash_command=f"{basic_path_skryptu_klraspi}/virtualenv venv".split()
     process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
@@ -92,6 +97,7 @@ def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
     drukuj(f"stderr: {stderr}")
 
 def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi):
+    drukuj("def: zachomikuj_stary_env_i_usun_stary_projekt")
     if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
         if os.path.exists(f"{basic_path_skryptu_klraspi}/.env"):
             shutil.copyfile(f"{basic_path_skryptu_klraspi}/.env", ".env_skopiowany")
