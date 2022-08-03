@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 #    pass    
                 drukuj("proces zakonczony")
         else:
-            drukuj("No byniu - a .env_projektowy to nie laska zrobic?!")
+            drukuj("No byniu - a .env_projekt to nie laska zrobic?!")
             
     except Exception as e:
         drukuj(f"exception {e}")
