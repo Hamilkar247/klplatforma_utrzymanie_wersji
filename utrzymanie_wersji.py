@@ -128,6 +128,7 @@ if __name__ == "__main__":
                 #    drukuj("id pobranego kodu i wersji z outsystem sa zbiezne")
                 #else:
                 #    pass    
+                drukuj("proces zakonczony")
         else:
             drukuj("No byniu - a .env_projektowy to nie laska zrobic?!")
             
