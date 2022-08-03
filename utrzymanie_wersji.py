@@ -90,7 +90,7 @@ def przekopiuj_stary_env(basic_path_skryptu_klraspi):
 
 def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
     drukuj("def: tworzenie_virtualenv_dla_projektu")
-    bash_command=f"{basic_path_skryptu_klraspi}/virtualenv venv".split()
+    bash_command=f"virtualenv {basic_path_skryptu_klraspi}/venv".split()
     process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
     drukuj(f"stdout: {stdout}")
