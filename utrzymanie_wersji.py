@@ -109,7 +109,7 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
         shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
         os.remove(f"{basic_path_ram}/skrypty_klraspi.zip")
         tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi)
-        przekopiuj_stary_env()
+        przekopiuj_stary_env(basic_path_skryptu_klraspi)
         drukuj("usunalem stary kod i zachomikowalem .env")
     else:
         drukuj("nie udalo sie przeniesc pliku - chyba kwestia - bo może nie ma")
