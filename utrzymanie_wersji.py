@@ -63,8 +63,11 @@ def pobierz_aktualna_wersje(spodziewana_data_wersji, basic_path_projektu, basic_
     if os.path.exists(path_commit_txt):
         drukuj("jestem")
         file_commit=open(path_commit_txt, "r")
-        commit=file_commit.read()
-        return str(commit).strip()
+        commit_data=str(file_commit.read()).strip()
+        if spodziewana_data_wersji==commit_data:
+            return commit_data
+        else:
+            return ""
     return ""
 
 def zwroc_stan_projektu(basic_path_skryptu_klraspi):
@@ -118,12 +121,12 @@ if __name__ == "__main__":
                     drukuj("mamy zbieznosc ;) - nic nie robie")
                 elif obecny_projekt=="brak pliku":
                     drukuj("brak pliku")
-                    pobierz_aktualna_wersje(basic_path_skryptu_klraspi)
+                    pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
                     drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                 else:
                     drukuj("rozpoczynam pobieranie z repa")
                     #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                    text=pobierz_aktualna_wersje(basic_path_ram)
+                    text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
                     if text != "":
                         zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
                         przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
