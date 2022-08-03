@@ -7,6 +7,7 @@ import traceback
 import urllib.request
 import zipfile
 from dotenv import load_dotenv
+import json
 
 def nazwa_programu():
     return "update_projektu_skryptu_klraspi.py"
@@ -29,12 +30,28 @@ def przerwij_i_wyswietl_czas():
     print("Current Time =", current_time)
     sys.exit()
 
-def pobierz_z_outsystemu_hash():
-    return "03/08/22 12:07:09"
-
-def sprawdz_hash():
-    #if open()
-    return True
+def pobierz_z_outsystemu_date_wersji():
+    url_wersji_programu=os.getenv("url_wersja_programu")
+    content_new=[]
+    data=""
+    #przykladowy docelowy url https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/ProgramSettings
+    try:
+        with urllib.request.urlopen(url_wersji_programu) as url:
+            content_new = json.loads(url.read()) #json.dumps(json.loads(url.read()), indent=2) #json.loads(url.read())
+        print(content_new)
+        #print(content_new[0])
+        for ustawienie in content_new:
+            print(ustawienie)
+            if ustawienie["Name"] == "obecna_wersja_czasowa_oprogramowania_na_produkcji":
+                data=ustawienie['Value']
+    except Exception as e:
+        drukuj(f"EEEEEEEEEERRRRRROOOOOOOORRRR")
+        drukuj(f"{e}")
+        drukuj(f"sprawdz link: {url}")
+        traceback.print_exc()
+    print
+    return data
+    #return "03/08/22 12:07:09"
 
 def pobierz_aktualna_wersje(basic_path_ram):
     urllib.request.urlretrieve("https://github.com/Hamilkar247/skrypty_klraspi/archive/refs/heads/master.zip", f"{basic_path_ram}/skrypty_klraspi.zip")
@@ -66,7 +83,7 @@ def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
     bash_command=f"{basic_path_skryptu_klraspi}/virtualenv venv".split()
     process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
-    drukuj(f"stdout: {stdout}") 
+    drukuj(f"stdout: {stdout}")
     drukuj(f"stderr: {stderr}")
 
 def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi):
@@ -86,13 +103,14 @@ if __name__ == "__main__":
     try:
         dotenv_path = "./.env_projektu"
         load_dotenv(dotenv_path)
+#        pobierz_z_outsystemu_date_wersji()
         if os.name == "posix":
             drukuj("posix")
             basic_path_ram=os.getenv("basic_path_ram")
             basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
             #pobierz_aktualna_wersje()
             obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
-            obecny_na_outsystem=pobierz_z_outsystemu_hash()
+            obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
             if obecny_projekt==obecny_na_outsystem:
                 drukuj("mamy zbieznosc ;)")
             elif obecny_projekt=="brak pliku":
@@ -116,41 +134,41 @@ if __name__ == "__main__":
         traceback.print_exc()
     
 
-    if sprawdz_hash() == True:
-        #os.chdir()
-        if os.path.isdir("../skrypty_klraspi") == True:
-            if os.path.exists("../skrypty_klraspi/.env"):
-                shutil.copyfile("../skrypty_klraspi/.env", ".env_skopiowany")
-            shutil.rmtree('../skrypty_klraspi')
-        os.chdir("..")
-        if os.path.isdir("../skrypty_klraspi") == False:
-            drukuj(f"{os.getcwd()}")
-            bash_command="git clone https://github.com/Hamilkar247/skrypty_klraspi".split()
-            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-            drukuj(f"stdout: {stdout}") 
-            drukuj(f"stderr: {stderr}")
-            os.chdir("skrypty_klraspi")
-            file_data = open(f"data.txt", "w")
-            file_data.write(f"{data_i_godzina()}")
-            if os.path.exists("../update_projektu_skryptu_klraspi/.env_skopiowany") == True:
-                shutil.copyfile("../update_projektu_skryptu_klraspi/.env_skopiowany", ".env")
-            bash_command="virtualenv venv".split()
-            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-            drukuj(f"stdout: {stdout}") 
-            drukuj(f"stderr: {stderr}")
-
-            #bash_command="git log -n 1 --oneline $(git branch -r)".split()
-            #process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            #stdout, stderr = process.communicate()
-            #drukuj(f"stdout: {stdout}")
-            #drukuj(f"stderr: {stderr}")
-            #if stdout != "":
-            #    file_commit=open("commit.txt", "w")
-            #    file_commit.write(f"{stdout}")
-            #else:
-            #    drukuj("brak strumienia wyjściowego")
+#    if sprawdz_hash() == True:
+#        #os.chdir()
+#        if os.path.isdir("../skrypty_klraspi") == True:
+#            if os.path.exists("../skrypty_klraspi/.env"):
+#                shutil.copyfile("../skrypty_klraspi/.env", ".env_skopiowany")
+#            shutil.rmtree('../skrypty_klraspi')
+#        os.chdir("..")
+#        if os.path.isdir("../skrypty_klraspi") == False:
+#            drukuj(f"{os.getcwd()}")
+#            bash_command="git clone https://github.com/Hamilkar247/skrypty_klraspi".split()
+#            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#            stdout, stderr = process.communicate()
+#            drukuj(f"stdout: {stdout}") 
+#            drukuj(f"stderr: {stderr}")
+#            os.chdir("skrypty_klraspi")
+#            file_data = open(f"data.txt", "w")
+#            file_data.write(f"{data_i_godzina()}")
+#            if os.path.exists("../update_projektu_skryptu_klraspi/.env_skopiowany") == True:
+#                shutil.copyfile("../update_projektu_skryptu_klraspi/.env_skopiowany", ".env")
+#            bash_command="virtualenv venv".split()
+#            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#            stdout, stderr = process.communicate()
+#            drukuj(f"stdout: {stdout}") 
+#            drukuj(f"stderr: {stderr}")
+#
+#            #bash_command="git log -n 1 --oneline $(git branch -r)".split()
+#            #process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#            #stdout, stderr = process.communicate()
+#            #drukuj(f"stdout: {stdout}")
+#            #drukuj(f"stderr: {stderr}")
+#            #if stdout != "":
+#            #    file_commit=open("commit.txt", "w")
+#            #    file_commit.write(f"{stdout}")
+#            #else:
+#            #    drukuj("brak strumienia wyjściowego")
 
 #https://stackoverflow.com/a/54636170/13231758
 ##     activate_this_file = "/path/to/virtualenv/bin/activate_this.py"
