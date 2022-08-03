@@ -80,8 +80,9 @@ def zwroc_stan_projektu(basic_path_skryptu_klraspi):
         data="brak pliku"
     return data
 
-def przekopiuj_stary_env():
-    shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
+def przekopiuj_stary_env(basic_path_skryptu_klraspi):
+    if os.path.exists(".env_skopiowany"):
+        shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
 
 def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
     bash_command=f"{basic_path_skryptu_klraspi}/virtualenv venv".split()
@@ -94,10 +95,12 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
     if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
         if os.path.exists(f"{basic_path_skryptu_klraspi}/.env"):
             shutil.copyfile(f"{basic_path_skryptu_klraspi}/.env", ".env_skopiowany")
-        shutil.rmtree(f"{basic_path_skryptu_klraspi}")
+        if os.path.isdir(basic_path_skryptu_klraspi):
+            shutil.rmtree(f"{basic_path_skryptu_klraspi}") 
+        shutil.move(f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master", f"{basic_path_skryptu_klraspi}/skrypty_klraspi")
         tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi)
+        przekopiuj_stary_env()
         drukuj("usunalem stary kod i zachomikowalem .env")
-        shutil.move(f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master", f"{basic_path_ram}/skrypty_klraspi")
     else:
         drukuj("nie udalo sie zachomikowac - bo może nie ma")
 
@@ -121,8 +124,11 @@ if __name__ == "__main__":
                     drukuj("mamy zbieznosc ;) - nic nie robie")
                 elif obecny_projekt=="brak pliku":
                     drukuj("brak pliku")
-                    pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    if text != "":
+                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
                     drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
+                    drukuj("koniec elif")
                 else:
                     drukuj("rozpoczynam pobieranie z repa")
                     #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
