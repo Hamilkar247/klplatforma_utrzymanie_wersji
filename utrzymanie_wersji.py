@@ -55,7 +55,7 @@ def pobierz_z_outsystemu_date_wersji():
 
 def pobierz_aktualna_wersje(basic_path_ram):
     urllib.request.urlretrieve("https://github.com/Hamilkar247/skrypty_klraspi/archive/refs/heads/master.zip", f"{basic_path_ram}/skrypty_klraspi.zip")
-    with zipfile.ZipFile("skrypty_klraspi.zip", "r") as zip_ref:
+    with zipfile.ZipFile(f"{basic_path_ram}/skrypty_klraspi.zip", "r") as zip_ref:
         zip_ref.extractall(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
     
     path_commit_txt=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master/commit.txt"
