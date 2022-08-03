@@ -101,32 +101,35 @@ if __name__ == "__main__":
     basic_path_skryptu_klraspi=""
     flara_skryptu=""
     try:
-        dotenv_path = "./.env_projektu"
-        load_dotenv(dotenv_path)
-#        pobierz_z_outsystemu_date_wersji()
-        if os.name == "posix":
-            drukuj("posix")
-            basic_path_ram=os.getenv("basic_path_ram")
-            basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
-            #pobierz_aktualna_wersje()
-            obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
-            obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
-            if obecny_projekt==obecny_na_outsystem:
-                drukuj("mamy zbieznosc ;)")
-            elif obecny_projekt=="brak pliku":
-                pobierz_aktualna_wersje(basic_path_ram)
-            else:
-                #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                text=pobierz_aktualna_wersje(basic_path_ram)
-                if text != "":
-                    zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                    przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
-            #drukuj(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
-            #drukuj(f"pobierz_aktualna_wersje: {pobierz_aktualna_wersje()}")
-            #if pobierz_z_outsystemu_hash() == pobierz_aktualna_wersje():
-            #    drukuj("id pobranego kodu i wersji z outsystem sa zbiezne")
-            #else:
-            #    pass    
+        if os.path.exists("./.env_projektu"):
+            dotenv_path = "./.env_projektu"
+            load_dotenv(dotenv_path)
+            # pobierz_z_outsystemu_date_wersji()
+            if os.name == "posix":
+                drukuj("posix")
+                basic_path_ram=os.getenv("basic_path_ram")
+                basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
+                #pobierz_aktualna_wersje()
+                obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
+                obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
+                if obecny_projekt==obecny_na_outsystem:
+                    drukuj("mamy zbieznosc ;)")
+                elif obecny_projekt=="brak pliku":
+                    pobierz_aktualna_wersje(basic_path_ram)
+                else:
+                    #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                    text=pobierz_aktualna_wersje(basic_path_ram)
+                    if text != "":
+                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                        przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
+                #drukuj(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
+                #drukuj(f"pobierz_aktualna_wersje: {pobierz_aktualna_wersje()}")
+                #if pobierz_z_outsystemu_hash() == pobierz_aktualna_wersje():
+                #    drukuj("id pobranego kodu i wersji z outsystem sa zbiezne")
+                #else:
+                #    pass    
+        else:
+            drukuj("No byniu - a .env_projektowy to nie laska zrobic?!")
             
     except Exception as e:
         drukuj(f"exception {e}")
