@@ -6,6 +6,7 @@ from datetime import datetime
 import traceback
 import urllib.request
 import zipfile
+from dotenv import load_dotenv
 
 def nazwa_programu():
     return "update_projektu_skryptu_klraspi.py"
@@ -29,58 +30,117 @@ def przerwij_i_wyswietl_czas():
     sys.exit()
 
 def pobierz_z_outsystemu_hash():
-    return "2236feb"
+    return "03/08/22 12:07:09"
 
 def sprawdz_hash():
     #if open()
     return True
 
-def pobierz_aktualna_wersje():
-    urllib.request.urlretrieve("https://github.com/Hamilkar247/skrypty_klraspi/archive/refs/heads/master.zip", "skrypty_klraspi.zip")
+def pobierz_aktualna_wersje(basic_path_ram):
+    urllib.request.urlretrieve("https://github.com/Hamilkar247/skrypty_klraspi/archive/refs/heads/master.zip", f"{basic_path_ram}/skrypty_klraspi.zip")
     with zipfile.ZipFile("skrypty_klraspi.zip", "r") as zip_ref:
-        zip_ref.extractall("skrypty_klraspi_tymczasowy")
+        zip_ref.extractall(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
     
-    path_commit_txt="skrypty_klraspi_tymczasowy/skrypty_klraspi-master/commit.txt"
+    path_commit_txt=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master/commit.txt"
     if os.path.exists(path_commit_txt):
-        print("jestem")
+        drukuj("jestem")
         file_commit=open(path_commit_txt, "r")
-        commit=file_commit.read().split(" ")[0]
-        return commit
+        commit=file_commit.read()
+        return str(commit).strip()
     return ""
 
-if __name__ == "__main__":
-    pobierz_aktualna_wersje()
-    print(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
-    print(f"pobierz_aktualna_wersje: {pobierz_aktualna_wersje()}")
-    if pobierz_z_outsystemu_hash() == pobierz_aktualna_wersje():
-        print("sa zbiezne")
+def zwroc_stan_projektu(basic_path_skryptu_klraspi):
+    scieszka_do_pliku_commit=f"{basic_path_skryptu_klraspi}/commit.txt"
+    if os.path.exists(scieszka_do_pliku_commit):
+        file=open(scieszka_do_pliku_commit, "r")
+        data=file.read().strip()
+        drukuj(f"zwracam date z commit.txt: {data}")
+    else:
+        data="brak pliku"
+    return data
 
-##    
-##    if sprawdz_hash() == True:
-##        #os.chdir()
-##        if os.path.isdir("../skrypty_klraspi") == True:
-##            if os.path.exists("../skrypty_klraspi/.env"):
-##                shutil.copyfile("../skrypty_klraspi/.env", ".env_skopiowany")
-##            shutil.rmtree('../skrypty_klraspi')
-##        os.chdir("..")
-##        if os.path.isdir("../skrypty_klraspi") == False:
-##            drukuj(f"{os.getcwd()}")
-##            bash_command="git clone https://github.com/Hamilkar247/skrypty_klraspi".split()
-##            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-##            stdout, stderr = process.communicate()
-##            drukuj(f"stdout: {stdout}") 
-##            drukuj(f"stderr: {stderr}")
-##            os.chdir("skrypty_klraspi")
-##            file_data = open(f"data.txt", "w")
-##            file_data.write(f"{data_i_godzina()}")
-##            if os.path.exists("../update_projektu_skryptu_klraspi/.env_skopiowany") == True:
-##                shutil.copyfile("../update_projektu_skryptu_klraspi/.env_skopiowany", ".env")
-##            bash_command="virtualenv venv".split()
-##            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-##            stdout, stderr = process.communicate()
-##            drukuj(f"stdout: {stdout}") 
-##            drukuj(f"stderr: {stderr}")
-##
+def przekopiuj_stary_env():
+    shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
+
+def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
+    bash_command=f"{basic_path_skryptu_klraspi}/virtualenv venv".split()
+    process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    drukuj(f"stdout: {stdout}") 
+    drukuj(f"stderr: {stderr}")
+
+def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi):
+    if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
+        if os.path.exists(f"{basic_path_skryptu_klraspi}/.env"):
+            shutil.copyfile(f"{basic_path_skryptu_klraspi}/.env", ".env_skopiowany")
+        shutil.rmtree(f"{basic_path_skryptu_klraspi}")
+        tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi)
+        drukuj("udalo sie zachomikowac")
+    else:
+        drukuj("nie udalo sie zachomikowac")
+
+if __name__ == "__main__":
+    basic_path_ram=""
+    basic_path_skryptu_klraspi=""
+    flara_skryptu=""
+    try:
+        dotenv_path = "./.env_projektu"
+        load_dotenv(dotenv_path)
+        if os.name == "posix":
+            drukuj("posix")
+            basic_path_ram=os.getenv("basic_path_ram")
+            basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
+            #pobierz_aktualna_wersje()
+            obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
+            obecny_na_outsystem=pobierz_z_outsystemu_hash()
+            if obecny_projekt==obecny_na_outsystem:
+                drukuj("mamy zbieznosc ;)")
+            elif obecny_projekt=="brak pliku":
+                pobierz_aktualna_wersje(basic_path_ram)
+            else:
+                #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                text=pobierz_aktualna_wersje(basic_path_ram)
+                if text != "":
+                    zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                    przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
+            #drukuj(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
+            #drukuj(f"pobierz_aktualna_wersje: {pobierz_aktualna_wersje()}")
+            #if pobierz_z_outsystemu_hash() == pobierz_aktualna_wersje():
+            #    drukuj("id pobranego kodu i wersji z outsystem sa zbiezne")
+            #else:
+            #    pass    
+            
+    except Exception as e:
+        drukuj(f"exception {e}")
+        drukuj(f"sprawdz czy .env widziany jest menadzer zadan/crontab")
+        traceback.print_exc()
+    
+
+    if sprawdz_hash() == True:
+        #os.chdir()
+        if os.path.isdir("../skrypty_klraspi") == True:
+            if os.path.exists("../skrypty_klraspi/.env"):
+                shutil.copyfile("../skrypty_klraspi/.env", ".env_skopiowany")
+            shutil.rmtree('../skrypty_klraspi')
+        os.chdir("..")
+        if os.path.isdir("../skrypty_klraspi") == False:
+            drukuj(f"{os.getcwd()}")
+            bash_command="git clone https://github.com/Hamilkar247/skrypty_klraspi".split()
+            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+            drukuj(f"stdout: {stdout}") 
+            drukuj(f"stderr: {stderr}")
+            os.chdir("skrypty_klraspi")
+            file_data = open(f"data.txt", "w")
+            file_data.write(f"{data_i_godzina()}")
+            if os.path.exists("../update_projektu_skryptu_klraspi/.env_skopiowany") == True:
+                shutil.copyfile("../update_projektu_skryptu_klraspi/.env_skopiowany", ".env")
+            bash_command="virtualenv venv".split()
+            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+            drukuj(f"stdout: {stdout}") 
+            drukuj(f"stderr: {stderr}")
+
             #bash_command="git log -n 1 --oneline $(git branch -r)".split()
             #process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             #stdout, stderr = process.communicate()
