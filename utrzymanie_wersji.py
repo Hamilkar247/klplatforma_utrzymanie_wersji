@@ -125,18 +125,22 @@ if __name__ == "__main__":
         drukuj(f"------{nazwa_programu()}--------")
         if os.path.exists("./.env_projektu"):
             dotenv_path = "./.env_projektu"
+            if os.path.exists(dotenv_path) == False:
+                drukuj("dotenv_path - sprawdz .env_projektu")
+                raise ExceptionEnvProjektu
             load_dotenv(dotenv_path)
             # pobierz_z_outsystemu_date_wersji()
             if os.name == "posix":
                 drukuj("posix")
                 basic_path_ram=os.getenv("basic_path_ram")
                 if os.path.isdir(basic_path_ram) == False:
+                    drukuj(".env_projektu - problem z basic_path_ram")
                     raise ExceptionEnvProjektu
                 basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
                 #ciekawostka podwojny isdir - powinnnniec dzialac to jak 
                 head, tail = os.path.split(basic_path_skryptu_klraspi)
                 if os.path.isdir(head) == False:
-                    drukuj(f"head: {head}")
+                    drukuj(f"basic_path_skryptu_klraspi - head: {head}")
                     raise ExceptionEnvProjektu
                 #pobierz_aktualna_wersje()
                 obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
@@ -156,7 +160,7 @@ if __name__ == "__main__":
                     text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
                     if text != "":
                         zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                        przekopiuj_stary_env(basic_path_ram, basic_path_skryptu_klraspi)
+                        przekopiuj_stary_env(basic_path_skryptu_klraspi)
                         drukuj("przekopiowalem stary env")
                     drukuj("koniec elsa")
                 #drukuj(f"pobierz_z_outsystem_hash: {pobierz_z_outsystemu_hash()}")
