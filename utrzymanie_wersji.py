@@ -122,6 +122,7 @@ if __name__ == "__main__":
     basic_path_skryptu_klraspi=""
     flara_skryptu=""
     try:
+        drukuj(f"------{nazwa_programu()}--------")
         if os.path.exists("./.env_projektu"):
             dotenv_path = "./.env_projektu"
             load_dotenv(dotenv_path)
