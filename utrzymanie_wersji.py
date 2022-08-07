@@ -222,6 +222,10 @@ def main():
         drukuj(f"exception {e}")
         drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
         traceback.print_exc()
+    except ExceptionWindows as e:
+        drukuj(f"exception {e}")
+        drukuj(f"Brak wersji oprogramowania na windowsa - wymaga analizy i/lub dopisania kodu")
+        traceback.print_exc()
     except Exception as e:
         drukuj(f"exception {e}")
         drukuj(f"sprawdz czy .env widziany jest menadzer zadan/crontab")
