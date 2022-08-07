@@ -4,6 +4,7 @@ import sys
 import shutil
 import subprocess
 from datetime import datetime
+import time
 import traceback
 import urllib.request
 import zipfile
@@ -164,9 +165,9 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
 def sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram):
     skrypty_klraspi_path=f"{basic_path_ram}/uruchom_skrypt_o_godzinie.py.flara"
     if os.path.exists(skrypty_klraspi_path) == True:
-        pass
-        file=open(skrypty_klraspi_path, "r")
-        numer_pid=file.read()
+        with open(skrypty_klraspi_path, "r") as file:
+            linie=file.readline()
+        numer_pid=int(linie)
         if os.name == "posix":
             if int(numer_pid)>-1:
                 os.kill(int(numer_pid), signal.SIGTERM)
@@ -186,38 +187,54 @@ def main():
         file_istnienie(dotenv_path, "dotenv_path - sprawdz .env_projektu")
         load_dotenv(dotenv_path)
         # pobierz_z_outsystemu_date_wersji()
-        if os.name == "posix":
-            drukuj("posix")
-            basic_path_ram=zmienna_env_folder("basic_path_ram", ".env_projektu - problem z basic_path_ram")
-            basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
-            head, tail = os.path.split(basic_path_skryptu_klraspi)
-            if os.path.isdir(head) == False:
-                drukuj(f"basic_path_skryptu_klraspi - head: {head}")
-                raise ExceptionEnvProjektu
-            #pobierz_aktualna_wersje()
-            obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
-            obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
-            if obecny_projekt==obecny_na_outsystem:
-                drukuj("mamy zbieznosc ;) - nic nie robie")
-            elif obecny_projekt=="brak pliku":
-                drukuj("brak pliku - pierwszy raz pobieram z repa")
-                drukuj("rozpoczynam pobieranie z repa")
-                text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
-                if text != "":
-                    zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
-                drukuj("koniec elif")
-            else:
-                sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram)
-                drukuj("rozpoczynam pobieranie z repa")
-                #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
-                if text != "":
-                    zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                    przekopiuj_stary_env(basic_path_skryptu_klraspi)
-                    drukuj("przekopiowalem stary env")
-                drukuj("koniec elsa")  
-            drukuj("proces zakonczony") 
+        while True:
+            if os.name == "posix":
+                drukuj("posix")
+                basic_path_ram=zmienna_env_folder("basic_path_ram", ".env_projektu - problem z basic_path_ram")
+                basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
+                head, tail = os.path.split(basic_path_skryptu_klraspi)
+                if os.path.isdir(head) == False:
+                    drukuj(f"basic_path_skryptu_klraspi - head: {head}")
+                    raise ExceptionEnvProjektu
+                #pobierz_aktualna_wersje()
+                obecny_projekt=zwroc_stan_projektu(basic_path_skryptu_klraspi)
+                obecny_na_outsystem=pobierz_z_outsystemu_date_wersji()
+                #preflara do umozliwienia uruchomienia sie skrypty_klraspi
+                path_preflara=f"{basic_path_ram}/uruchom_skrypty_klraspi.preflara"
+                if obecny_projekt==obecny_na_outsystem:
+                    drukuj("mamy zbieznosc ;) - nic nie robie")
+                    if os.path.exists(path_preflara) == False:
+                        file=open(path_preflara, "w")
+                        file.write("")
+                elif obecny_projekt=="brak pliku":
+                    if os.path.exists(path_preflara):
+                        os.remove(path_preflara)
+                    drukuj("brak pliku - pierwszy raz pobieram z repa")
+                    drukuj("rozpoczynam pobieranie z repa")
+                    text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    if text != "":
+                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                        file=open(path_preflara, "w")
+                        file.write("")
+                    drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
+                    drukuj("koniec elif")
+                else:
+                    if os.path.exists(path_preflara):
+                        os.remove(path_preflara)
+                    sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram)
+                    drukuj("rozpoczynam pobieranie z repa")
+                    #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                    text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    if text != "":
+                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                        przekopiuj_stary_env(basic_path_skryptu_klraspi)
+                        drukuj("przekopiowalem stary env")
+                        drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
+                        file=open(path_preflara, "w")
+                        file.write("")
+                    drukuj("koniec elsa")
+                drukuj("proces zakonczony") 
+                time.sleep(10*60)
     except ExceptionEnvProjektu as e:
         drukuj(f"exception {e}")
         drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
