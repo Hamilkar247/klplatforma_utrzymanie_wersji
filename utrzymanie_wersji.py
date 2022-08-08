@@ -92,14 +92,14 @@ def pobierz_z_outsystemu_date_wersji():
         #print(content_new[0])
         for ustawienie in content_new:
             print(ustawienie)
-            if ustawienie["Name"] == "obecna_wersja_czasowa_oprogramowania_na_produkcji":
-                data=ustawienie['Value']
+            if "Name" in ustawienie:
+                if ustawienie["Name"] == "obecna_wersja_czasowa_oprogramowania_na_produkcji":
+                    data=ustawienie['Value']
     except Exception as e:
         drukuj(f"EEEEEEEEEERRRRRROOOOOOOORRRR")
-        drukuj(f"{e}")
+        drukuj(f"exception {e}")
         drukuj(f"sprawdz link: {url_wersji_programu}")
         traceback.print_exc()
-    print
     return data
     #return "03/08/22 12:07:09"
 
