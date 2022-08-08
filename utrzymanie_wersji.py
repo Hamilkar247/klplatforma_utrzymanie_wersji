@@ -144,7 +144,17 @@ def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
     drukuj(f"stdout: {stdout}")
     drukuj(f"stderr: {stderr}")
 
-def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi):
+def instalacja_libek(basic_path_skryptu_klraspi):
+    if os.name == "posix":
+        bash_command=f"{basic_path_skryptu_klraspi}/windows_bash_do_instalacji_libek_w_venv.sh "
+        process = subprocess.Popepn(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        drukuj(f"stdout: {stdout}")
+        drukuj(f"stderr: {stderr}")
+    else:
+        raise ExceptionWindows
+
+def zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi):
     drukuj("def: zachomikuj_stary_env_i_usun_stary_projekt")
     if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
         if os.path.exists(f"{basic_path_skryptu_klraspi}/.env"):
@@ -154,10 +164,11 @@ def zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu
     path_to_tymczasowy_miejsce_pobranego_programu=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master"
     if os.path.isdir(path_to_tymczasowy_miejsce_pobranego_programu):
         shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_skryptu_klraspi}")
-        shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
+        shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
         os.remove(f"{basic_path_ram}/skrypty_klraspi.zip")
         tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi)
         przekopiuj_stary_env(basic_path_skryptu_klraspi)
+        instalacja_libek(basic_path_skryptu_klraspi)
         drukuj("usunalem stary kod i zachomikowalem .env")
     else:
         drukuj("nie udalo sie przeniesc pliku - chyba kwestia - bo może nie ma")
@@ -213,7 +224,7 @@ def main():
                     drukuj("rozpoczynam pobieranie z repa")
                     text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
                     if text != "":
-                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                        zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi)
                         file=open(path_preflara, "w")
                         file.write("")
                     drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
@@ -226,7 +237,7 @@ def main():
                     #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
                     text=pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
                     if text != "":
-                        zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
+                        zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi)
                         przekopiuj_stary_env(basic_path_skryptu_klraspi)
                         drukuj("przekopiowalem stary env")
                         drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
