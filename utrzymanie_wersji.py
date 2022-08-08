@@ -147,7 +147,7 @@ def tworzenie_virtualenv_dla_projektu(basic_path_skryptu_klraspi):
 def instalacja_libek(basic_path_skryptu_klraspi):
     if os.name == "posix":
         bash_command=f"{basic_path_skryptu_klraspi}/windows_bash_do_instalacji_libek_w_venv.sh "
-        process = subprocess.Popepn(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         drukuj(f"stdout: {stdout}")
         drukuj(f"stderr: {stderr}")
