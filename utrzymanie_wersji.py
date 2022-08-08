@@ -137,9 +137,9 @@ def przekopiuj_stary_env(basic_path_skryptu_klraspi):
     if os.path.exists(".env_skopiowany"):
         shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
 
-def virtualenv_i_instalacja_libek(basic_path_skryptu_klraspi):
+def virtualenv_i_instalacja_libek():
     if os.name == "posix":
-        bash_command=f"{basic_path_skryptu_klraspi}/linux_bash_do_instalacji_libek_w_venv.sh "
+        bash_command=f"./linux_bash_do_instalacji_libek_w_venv.sh "
         process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         drukuj(f"stdout: {stdout}")
@@ -160,7 +160,7 @@ def zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic
         shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
         os.remove(f"{basic_path_ram}/skrypty_klraspi.zip")
         przekopiuj_stary_env(basic_path_skryptu_klraspi)
-        virtualenv_i_instalacja_libek(basic_path_skryptu_klraspi)
+        virtualenv_i_instalacja_libek()
         drukuj("usunalem stary kod i zachomikowalem .env")
     else:
         drukuj("nie udalo sie przeniesc pliku - chyba kwestia - bo może nie ma")
