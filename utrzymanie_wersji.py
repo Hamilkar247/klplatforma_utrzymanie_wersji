@@ -139,7 +139,7 @@ def przekopiuj_stary_env(basic_path_skryptu_klraspi):
 
 def virtualenv_i_instalacja_libek():
     if os.name == "posix":
-        bash_command=f"./linux_bash_do_instalacji_libek_w_venv.sh "
+        bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
         process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
         drukuj(f"stdout: {stdout}")
