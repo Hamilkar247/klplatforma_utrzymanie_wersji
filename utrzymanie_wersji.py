@@ -172,7 +172,6 @@ def sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram):
             linie=file.readline()
         numer_pid=int(linie)
         if os.name == "posix":
-
             if int(numer_pid)>-1:
                 if psutil.pid_exists(numer_pid) == True:
                     os.kill(int(numer_pid), signal.SIGTERM)
@@ -240,6 +239,9 @@ def main():
                     drukuj("koniec elsa")
                 drukuj("proces zakonczony") 
                 time.sleep(10*60)
+    except TypeError as e:
+        drukuj(f"exception: {e}")
+        raise ExceptionEnvProjektu
     except ExceptionEnvProjektu as e:
         drukuj(f"exception {e}")
         drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
