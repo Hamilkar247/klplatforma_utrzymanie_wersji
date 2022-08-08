@@ -97,7 +97,7 @@ def pobierz_z_outsystemu_date_wersji():
     except Exception as e:
         drukuj(f"EEEEEEEEEERRRRRROOOOOOOORRRR")
         drukuj(f"{e}")
-        drukuj(f"sprawdz link: {url}")
+        drukuj(f"sprawdz link: {url_wersji_programu}")
         traceback.print_exc()
     print
     return data
