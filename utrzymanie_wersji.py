@@ -184,7 +184,7 @@ def sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram):
 def main():
     basic_path_ram=""
     basic_path_skryptu_klraspi=""
-    flara_skryptu=""
+    path_preflara=""
     try:
         drukuj(f"------{nazwa_programu()}--------")
         dotenv_path = "./.env_projektu"
@@ -235,10 +235,11 @@ def main():
                         drukuj("przekopiowalem stary env")
                         drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                         file=open(path_preflara, "w")
-                        file.write("")
+                        file.write(f"{os.get_pid()}")
                     drukuj("koniec elsa")
                 drukuj("proces zakonczony") 
                 time.sleep(10*60)
+            usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         drukuj(f"exception: {e}")
         raise ExceptionEnvProjektu
@@ -246,14 +247,17 @@ def main():
         drukuj(f"exception {e}")
         drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
         traceback.print_exc()
+        usun_flare(basic_path_ram, path_preflara)
     except ExceptionWindows as e:
         drukuj(f"exception {e}")
         drukuj(f"Brak wersji oprogramowania na windowsa - wymaga analizy i/lub dopisania kodu")
         traceback.print_exc()
+        usun_flare(basic_path_ram, path_preflara)
     except Exception as e:
         drukuj(f"exception {e}")
         drukuj(f"sprawdz czy .env widziany jest menadzer zadan/crontab")
         traceback.print_exc()
+        usun_flare(basic_path_ram, path_preflara)
 
 if __name__ == "__main__":
     main()
