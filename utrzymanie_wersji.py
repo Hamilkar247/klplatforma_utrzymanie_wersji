@@ -255,7 +255,7 @@ def main():
         usun_flare(basic_path_ram, path_preflara)
     except Exception as e:
         drukuj(f"exception {e}")
-        drukuj(f"sprawdz czy .env widziany jest menadzer zadan/crontab")
+        drukuj(f"sprawdz czy .env_projektu widziany jest menadzer zadan/crontab")
         traceback.print_exc()
         usun_flare(basic_path_ram, path_preflara)
 
