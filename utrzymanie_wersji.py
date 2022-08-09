@@ -238,7 +238,7 @@ def main():
                         file.write(f"{os.get_pid()}")
                     drukuj("koniec elsa")
                 drukuj("proces zakonczony") 
-                time.sleep(10*60)
+                time.sleep(5*60)
             usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         drukuj(f"exception: {e}")
