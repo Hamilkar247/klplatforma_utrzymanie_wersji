@@ -209,7 +209,7 @@ def main():
                     drukuj("mamy zbieznosc ;) - nic nie robie")
                     if os.path.exists(path_preflara) == False:
                         file=open(path_preflara, "w")
-                        file.write("")
+                        file.write(f"{os.get_pid()}")
                 elif obecny_projekt=="brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
@@ -219,7 +219,7 @@ def main():
                     if text != "":
                         zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi)
                         file=open(path_preflara, "w")
-                        file.write("")
+                        file.write(f"{os.get_pid()}")
                     drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                     drukuj("koniec elif")
                 else:
