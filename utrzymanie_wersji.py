@@ -142,11 +142,12 @@ def zwroc_stan_projektu(basic_path_skryptu_klraspi):
     return data
 
 def przekopiuj_stary_env(basic_path_skryptu_klraspi):
-    drukuj("def: przekopiuj_stary_env")
+    drukuj("def: przekopiuj_stary_env - UWAGA to chwile trwa")
     if os.path.exists(".env_skopiowany"):
         shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
 
 def virtualenv_i_instalacja_libek():
+    drukuj("def: virtualenv_i_instalacja_libek")
     if os.name == "posix":
         bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
         process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
