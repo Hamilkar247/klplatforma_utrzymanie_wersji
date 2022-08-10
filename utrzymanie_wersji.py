@@ -118,13 +118,16 @@ def pobierz_aktualna_wersje(spodziewana_data_wersji, basic_path_projektu, basic_
     
     path_commit_txt=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master/commit.txt"
     if os.path.exists(path_commit_txt):
-        drukuj("jestem")
+        drukuj(f"plik z commitem z pobranej paczki istniej {path_commit_txt}")
         file_commit=open(path_commit_txt, "r")
         commit_data=str(file_commit.read()).strip()
         if spodziewana_data_wersji==commit_data:
             return commit_data
         else:
+            drukuj(f"spodziewana_data_wersji==commit_data: {spodziewana_data_wersji}=={commit_data} - zwracam nic" )
             return ""
+    else:
+        drukuj(f"nie ma pliku w scieszce {path_commit_txt} - zwracam nic")
     return ""
 
 def zwroc_stan_projektu(basic_path_skryptu_klraspi):
