@@ -131,7 +131,7 @@ class UtrzymanieWersji():
                         os.kill(int(numer_pid), signal.SIGTERM)
                         os.remove(skrypty_klraspi_path)
             else:
-                raise self.fp.ExceptionWindows
+                raise ExceptionWindows
 
 ##################
 
@@ -155,12 +155,12 @@ def main():
                 head, tail = os.path.split(basic_path_skryptu_klraspi)
                 if os.path.isdir(head) == False:
                     fp.drukuj(f"basic_path_skryptu_klraspi - head: {head}")
-                    raise fp.exceptionEnvProjektu
+                    raise ExceptionEnvProjektu
                 #pobierz_aktualna_wersje()
                 obecny_projekt=uw.zwroc_stan_projektu(basic_path_skryptu_klraspi)
                 obecny_na_outsystem=uw.pobierz_z_outsystemu_date_wersji()
                 #preflara do umozliwienia uruchomienia sie skrypty_klraspi
-                path_preflara=f"{basic_path_ram}/uruchom_skrypty_klraspi.preflara"
+                path_preflara=f"{basic_path_ram}/utrzymanie_wersji.py.preflara"
                 if obecny_projekt==obecny_na_outsystem:
                     fp.drukuj("mamy zbieznosc ;) - nic nie robie")
                     if os.path.exists(path_preflara) == False:
