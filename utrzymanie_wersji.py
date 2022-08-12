@@ -17,7 +17,7 @@ from funkcje_pomocnicze import FunkcjePomocnicze, ExceptionWindows, ExceptionNot
 #####################
 
 def nazwa_programu():
-    return "update_projektu_skryptu_klraspi.py"
+    return "utrzymanie_wersji.py"
 
 def funkcje_pomocnicze_inicjalizacja():
     fp=FunkcjePomocnicze(nazwa_programu())
@@ -119,7 +119,7 @@ class UtrzymanieWersji():
         else:
             self.fp.drukuj("nie udalo sie przeniesc pliku - chyba kwestia - bo może nie ma")
     
-    def sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram):
+    def sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(self, basic_path_ram):
         skrypty_klraspi_path=f"{basic_path_ram}/uruchom_skrypt_o_godzinie.py.flara"
         if os.path.exists(skrypty_klraspi_path) == True:
             with open(skrypty_klraspi_path, "r") as file:
