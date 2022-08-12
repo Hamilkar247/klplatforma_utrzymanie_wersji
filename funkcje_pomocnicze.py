@@ -1,13 +1,20 @@
 # - *- coding: utf-8 - *-
 
 from inspect import trace
-import urllib.request, json
 import sys
 import os
 from datetime import datetime, timedelta
 import traceback
 from dotenv import load_dotenv
-import psutil
+
+class ExceptionEnvProjektu(Exception):
+    pass
+
+class ExceptionNotExistFolder(Exception):
+    pass
+
+class ExceptionWindows(Exception):
+    pass
 
 #############
 
@@ -15,9 +22,6 @@ class FunkcjePomocnicze():
 
     def __init__(self, nazwa_programu):
         self.nazwa_programu=nazwa_programu
-        self.exceptionEnvProjektu = self.ExceptionEnvProjektu()
-        self.exceptionNotExistFolder = self.ExceptionNotExistFolder()
-        self.exceptionWindows = self.ExceptionWindows()
 
     def data_i_godzina(self):
         now = datetime.now()
@@ -39,14 +43,7 @@ class FunkcjePomocnicze():
     
     #########################
     
-    class ExceptionEnvProjektu(Exception):
-        pass
-    
-    class ExceptionNotExistFolder(Exception):
-        pass
-    
-    class ExceptionWindows(Exception):
-        pass
+
     
     def file_istnienie(self, path_to_file, komunikat):
         if os.path.exists(path_to_file) == False:

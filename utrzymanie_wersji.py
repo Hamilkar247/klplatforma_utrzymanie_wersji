@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import json
 import signal
 import psutil
-from funkcje_pomocnicze import FunkcjePomocnicze
+from funkcje_pomocnicze import FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
 
 #####################
 
@@ -23,13 +23,11 @@ def funkcje_pomocnicze_inicjalizacja():
     fp=FunkcjePomocnicze(nazwa_programu())
     return fp
 
-
 #######################
 class UtrzymanieWersji():
     
     def __init__(self):
         self.fp=funkcje_pomocnicze_inicjalizacja()
-
 
     def pobierz_z_outsystemu_date_wersji(self):
         self.fp.drukuj("def: pobierz_z_outsystemu_date_wersji")
@@ -204,13 +202,13 @@ def main():
             fp.usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
-        raise fp.exceptionEnvProjektu
-    except fp.exceptionEnvProjektu as e:
+        raise ExceptionEnvProjektu
+    except ExceptionEnvProjektu as e:
         fp.drukuj(f"exception {e}")
         fp.drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
-    except fp.ExceptionWindows as e:
+    except ExceptionWindows as e:
         fp.drukuj(f"exception {e}")
         fp.drukuj(f"Brak wersji oprogramowania na windowsa - wymaga analizy i/lub dopisania kodu")
         traceback.print_exc()
