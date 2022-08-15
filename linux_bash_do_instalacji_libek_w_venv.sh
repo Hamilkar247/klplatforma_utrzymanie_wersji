@@ -2,7 +2,7 @@
 
 path=$(pwd)
 cd ..
-cd skrypty_klraspi
+cd klplatforma_odbior_wysylka
 virtualenv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
