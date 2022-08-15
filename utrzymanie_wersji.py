@@ -160,11 +160,11 @@ def main():
         while True:
             if os.name == "posix":
                 fp.drukuj("posix")
-                basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
-                head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
                 if os.path.isdir(basic_path_ram) == True:
                     os.mkdir(basic_path_ram)
                     fp.drukuj(f"stworzylem folder {basic_path_ram}")
+                basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
+                head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
                 if os.path.isdir(head) == False:
                     fp.drukuj(f"basic_path_klplatforma_odbior_wysylka - head: {head}")
                     raise ExceptionEnvProjektu
