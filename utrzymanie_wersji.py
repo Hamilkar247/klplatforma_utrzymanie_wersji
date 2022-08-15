@@ -160,7 +160,7 @@ def main():
         while True:
             if os.name == "posix":
                 fp.drukuj("posix")
-                if os.path.isdir(basic_path_ram) == True:
+                if os.path.isdir(basic_path_ram) == False:
                     os.mkdir(basic_path_ram)
                     fp.drukuj(f"stworzylem folder {basic_path_ram}")
                 basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
