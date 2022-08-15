@@ -16,6 +16,9 @@ class ExceptionNotExistFolder(Exception):
 class ExceptionWindows(Exception):
     pass
 
+class ExceptionRepository(Exception):
+    pass
+
 #############
 
 class FunkcjePomocnicze():

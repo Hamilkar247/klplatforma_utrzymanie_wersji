@@ -1,3 +1,4 @@
+from inspect import trace
 import os
 from re import L
 import sys
@@ -12,7 +13,7 @@ from dotenv import load_dotenv
 import json
 import signal
 import psutil
-from funkcje_pomocnicze import FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
+from funkcje_pomocnicze import ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
 
 #####################
 
@@ -28,6 +29,10 @@ class UtrzymanieWersji():
     
     def __init__(self):
         self.fp=funkcje_pomocnicze_inicjalizacja()
+        
+        self.klplatforma_odbior_wysylka="klplatforma_odbior_wysylka"
+        #self.klplatforma_odbior_wysylka_tymczasowy="klplatforma_odbior_wysylka_tymczasowy"
+        self.nazwa_pliku_z_data_programu="commit.txt"
 
     def pobierz_z_outsystemu_date_wersji(self):
         self.fp.drukuj("def: pobierz_z_outsystemu_date_wersji")
@@ -56,11 +61,17 @@ class UtrzymanieWersji():
     def pobierz_aktualna_wersje(self, spodziewana_data_wersji, basic_path_projektu, basic_path_ram):
         self.fp.drukuj("def: pobierz_aktualna_wersje")
         url_zip_code_repo=os.getenv("url_zip_code_repo")
-        urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/skrypty_klraspi.zip")
-        with zipfile.ZipFile(f"{basic_path_ram}/skrypty_klraspi.zip", "r") as zip_ref:
-            zip_ref.extractall(f"{basic_path_ram}/skrypty_klraspi_tymczasowy")
+        urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
+        try: 
+            with zipfile.ZipFile(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip", "r") as zip_ref:
+                zip_ref.extractall(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy")
         
-        path_commit_txt=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master/commit.txt"
+            path_commit_txt=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}_tymczasowy-master/{self.nazwa_pliku_z_data_programu}"
+        except ExceptionRepository as e:
+            self.fp.drukuj("program był pisany pod pobieranie zipów z githuba - w przypadku zmiany hostingu może być problem ")
+            traceback.print_exc()
+            raise Exception
+            
         if os.path.exists(path_commit_txt):
             self.fp.drukuj(f"plik z commitem z pobranej paczki istniej {path_commit_txt}")
             file_commit=open(path_commit_txt, "r")
@@ -76,11 +87,11 @@ class UtrzymanieWersji():
     
     def zwroc_stan_projektu(self, basic_path_skryptu_klraspi):
         self.fp.drukuj("def: zwroc_stan_projektu")
-        scieszka_do_pliku_commit=f"{basic_path_skryptu_klraspi}/commit.txt"
+        scieszka_do_pliku_commit=f"{basic_path_skryptu_klraspi}/{self.nazwa_pliku_z_data_programu}"
         if os.path.exists(scieszka_do_pliku_commit):
             file=open(scieszka_do_pliku_commit, "r")
             data=file.read().strip()
-            self.fp.drukuj(f"zwracam date z commit.txt: {data}")
+            self.fp.drukuj(f"zwracam date z {self.nazwa_pliku_z_data_programu}: {data}")
         else:
             data="brak pliku"
         return data
@@ -118,11 +129,11 @@ class UtrzymanieWersji():
                 shutil.copyfile(f"{basic_path_skryptu_klraspi}/.env", ".env_skopiowany")
             if os.path.isdir(basic_path_skryptu_klraspi):
                 shutil.rmtree(f"{basic_path_skryptu_klraspi}") 
-        path_to_tymczasowy_miejsce_pobranego_programu=f"{basic_path_ram}/skrypty_klraspi_tymczasowy/skrypty_klraspi-master"
+        path_to_tymczasowy_miejsce_pobranego_programu=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}-master"
         if os.path.isdir(path_to_tymczasowy_miejsce_pobranego_programu):
             shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_skryptu_klraspi}")
-            shutil.rmtree(f"{basic_path_ram}/skrypty_klraspi_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
-            os.remove(f"{basic_path_ram}/skrypty_klraspi.zip")
+            shutil.rmtree(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
+            os.remove(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
             self.przekopiuj_stary_env(basic_path_skryptu_klraspi)
             self.virtualenv_i_instalacja_libek()
             self.fp.drukuj("usunalem stary kod i zachomikowalem .env")
@@ -169,9 +180,9 @@ def main():
                     if os.path.isdir(basic_path_ram) == False:
                         os.mkdir(basic_path_ram)
                         fp.drukuj(f"stworzylem folder {basic_path_ram}")
-                    else:
-                        fp.drukuj("sprawdz basic_path_ram")
-                        raise ExceptionEnvProjektu
+                else:
+                    fp.drukuj("sprawdz basic_path_ram")
+                    raise ExceptionEnvProjektu
                 basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
                 head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
                 if os.path.isdir(head) == False:
