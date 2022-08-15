@@ -84,12 +84,22 @@ class UtrzymanieWersji():
         else:
             data="brak pliku"
         return data
-    
+
+    def istnienie_virtualenv(self, basic_path_skryptu_klraspi):
+        self.fp.drukuj("def: istnienie_virtualenv")
+        scieszka_do_virtualenvironment=f"{basic_path_skryptu_klraspi}/venv"
+        if os.isdir(scieszka_do_virtualenvironment):
+            self.fp.drukuj("jest venv")
+            return True
+        else:
+            self.fp.drukuj("nie ma venva - trzeba go stworzyc")
+            return False
+
     def przekopiuj_stary_env(self, basic_path_skryptu_klraspi):
         self.fp.drukuj("def: przekopiuj_stary_env - UWAGA to chwile trwa")
         if os.path.exists(".env_skopiowany"):
             shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
-    
+
     def virtualenv_i_instalacja_libek(self):
         self.fp.drukuj("def: virtualenv_i_instalacja_libek")
         if os.name == "posix":
@@ -99,8 +109,8 @@ class UtrzymanieWersji():
             self.fp.drukuj(f"stdout: {stdout}")
             self.fp.drukuj(f"stderr: {stderr}")
         else:
-            raise self.fp.exceptionWindows
-    
+            raise ExceptionWindows
+
     def zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(self, basic_path_ram, basic_path_skryptu_klraspi):
         self.fp.drukuj("def: zachomikuj_stary_env_i_usun_stary_projekt")
         if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
@@ -166,6 +176,8 @@ def main():
                     if os.path.exists(path_preflara) == False:
                         file=open(path_preflara, "w")
                         file.write(f"{os.getpid()}")
+                    if uw.istnienie_virtualenv(basic_path_skryptu_klraspi) == False:
+                        uw.virtualenv_i_instalacja_libek()
                 elif obecny_projekt=="brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
