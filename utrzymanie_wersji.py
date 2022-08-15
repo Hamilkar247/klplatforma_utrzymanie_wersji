@@ -161,6 +161,9 @@ def main():
             if os.name == "posix":
                 fp.drukuj("posix")
                 basic_path_ram=os.getenv("basic_path_ram")
+                if basic_path_ram == "":
+                    raise ExceptionEnvProjektu
+                fp.drukuj(f"ahjo - basic_path_ram {basic_path_ram}")
                 head, tail = os.path.split(basic_path_ram)
                 if os.path.isdir(head) == True:
                     if os.path.isdir(basic_path_ram) == False:
