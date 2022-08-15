@@ -148,7 +148,7 @@ class UtrzymanieWersji():
 def main():
     fp=FunkcjePomocnicze(nazwa_programu())
     basic_path_ram=""
-    basic_path_skryptu_klraspi=""
+    basic_path_klplatforma_odbior_wysylka=""
     path_preflara=""
     try:
         fp.drukuj(f"------{nazwa_programu()}--------")
@@ -161,13 +161,16 @@ def main():
             if os.name == "posix":
                 fp.drukuj("posix")
                 basic_path_ram=fp.zmienna_env_folder("basic_path_ram", ".env_projektu - problem z basic_path_ram")
-                basic_path_skryptu_klraspi=os.getenv("basic_path_skryptu_klraspi")
-                head, tail = os.path.split(basic_path_skryptu_klraspi)
+                basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
+                head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
+                if os.path.isdir(basic_path_ram) == True:
+                    os.mkdir(basic_path_ram)
+                    fp.drukuj(f"stworzylem folder {basic_path_ram}")
                 if os.path.isdir(head) == False:
-                    fp.drukuj(f"basic_path_skryptu_klraspi - head: {head}")
+                    fp.drukuj(f"basic_path_klplatforma_odbior_wysylka - head: {head}")
                     raise ExceptionEnvProjektu
                 #pobierz_aktualna_wersje()
-                obecny_projekt=uw.zwroc_stan_projektu(basic_path_skryptu_klraspi)
+                obecny_projekt=uw.zwroc_stan_projektu(basic_path_klplatforma_odbior_wysylka)
                 obecny_na_outsystem=uw.pobierz_z_outsystemu_date_wersji()
                 #preflara do umozliwienia uruchomienia sie skrypty_klraspi
                 path_preflara=f"{basic_path_ram}/utrzymanie_wersji.py.preflara"
@@ -176,16 +179,16 @@ def main():
                     if os.path.exists(path_preflara) == False:
                         file=open(path_preflara, "w")
                         file.write(f"{os.getpid()}")
-                    if uw.istnienie_virtualenv(basic_path_skryptu_klraspi) == False:
+                    if uw.istnienie_virtualenv(basic_path_klplatforma_odbior_wysylka) == False:
                         uw.virtualenv_i_instalacja_libek()
                 elif obecny_projekt=="brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
                     fp.drukuj("brak pliku - pierwszy raz pobieram z repa")
                     fp.drukuj("rozpoczynam pobieranie z repa")
-                    text=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    text=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_klplatforma_odbior_wysylka, basic_path_ram=basic_path_ram)
                     if text != "":
-                        uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi)
+                        uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
                         file=open(path_preflara, "w")
                         file.write(f"{os.getpid()}")
                     fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
@@ -196,12 +199,12 @@ def main():
                     uw.sprawdz_czy_skrypty_klraspi_dziala_i_ubij_jesli_dziala(basic_path_ram)
                     fp.drukuj("rozpoczynam pobieranie z repa")
                     #zachomikuj_stary_env_i_usun_stary_projekt(basic_path_ram, basic_path_skryptu_klraspi)
-                    wersja_na_outsystemie=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_skryptu_klraspi, basic_path_ram=basic_path_ram)
+                    wersja_na_outsystemie=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_klplatforma_odbior_wysylka, basic_path_ram=basic_path_ram)
                     fp.drukuj(f"wersja_na_outsystemie: {wersja_na_outsystemie}")
                     if wersja_na_outsystemie != "":
                         fp.drukuj("akcja w else")
-                        uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_skryptu_klraspi)
-                        uw.przekopiuj_stary_env(basic_path_skryptu_klraspi)
+                        uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
+                        uw.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
                         fp.drukuj("przekopiowalem stary env")
                         fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                         file=open(path_preflara, "w")
