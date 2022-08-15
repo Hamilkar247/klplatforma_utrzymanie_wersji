@@ -67,10 +67,10 @@ class UtrzymanieWersji():
                 zip_ref.extractall(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy")
         
             path_commit_txt=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}-master/{self.nazwa_pliku_z_data_programu}"
-        except ExceptionRepository as e:
+        except Exception as e:
+            self.fp.drukuj(f"exception: {e}")
             self.fp.drukuj("program był pisany pod pobieranie zipów z githuba - w przypadku zmiany hostingu może być problem ")
             traceback.print_exc()
-            raise Exception
             
         if os.path.exists(path_commit_txt):
             self.fp.drukuj(f"plik z commitem z pobranej paczki istniej {path_commit_txt}")
@@ -80,14 +80,16 @@ class UtrzymanieWersji():
                 return commit_data
             else:
                 self.fp.drukuj(f"spodziewana_data_wersji==commit_data: {spodziewana_data_wersji}=={commit_data} - a więc zwracam nic" )
+                self.fp.drukuj("UWAGA czy napewno wypchnąłeś danem git push --force na repo? wyglada na niespojnosci daty settingsie programu na frontendzie z  ")
+                raise ExceptionRepository
                 return ""
         else:
             self.fp.drukuj(f"nie ma pliku w scieszce {path_commit_txt} - zwracam nic")
         return ""
     
-    def zwroc_stan_projektu(self, basic_path_skryptu_klraspi):
+    def zwroc_stan_projektu(self, basic_path_klplatforma_odbior_wysylka):
         self.fp.drukuj("def: zwroc_stan_projektu")
-        scieszka_do_pliku_commit=f"{basic_path_skryptu_klraspi}/{self.nazwa_pliku_z_data_programu}"
+        scieszka_do_pliku_commit=f"{basic_path_klplatforma_odbior_wysylka}/{self.nazwa_pliku_z_data_programu}"
         if os.path.exists(scieszka_do_pliku_commit):
             file=open(scieszka_do_pliku_commit, "r")
             data=file.read().strip()
@@ -96,9 +98,9 @@ class UtrzymanieWersji():
             data="brak pliku"
         return data
 
-    def istnienie_virtualenv(self, basic_path_skryptu_klraspi):
+    def istnienie_virtualenv(self, basic_path_klplatforma_odbior_wysylka):
         self.fp.drukuj("def: istnienie_virtualenv")
-        scieszka_do_virtualenvironment=f"{basic_path_skryptu_klraspi}/venv"
+        scieszka_do_virtualenvironment=f"{basic_path_klplatforma_odbior_wysylka}/venv"
         if os.path.isdir(scieszka_do_virtualenvironment):
             self.fp.drukuj("jest venv")
             return True
@@ -106,10 +108,10 @@ class UtrzymanieWersji():
             self.fp.drukuj("nie ma venva - trzeba go stworzyc")
             return False
 
-    def przekopiuj_stary_env(self, basic_path_skryptu_klraspi):
+    def przekopiuj_stary_env(self, basic_path_klplatforma_odbior_wysylka):
         self.fp.drukuj("def: przekopiuj_stary_env - UWAGA to chwile trwa")
         if os.path.exists(".env_skopiowany"):
-            shutil.copyfile(".env_skopiowany", f"{basic_path_skryptu_klraspi}/.env")    
+            shutil.copyfile(".env_skopiowany", f"{basic_path_klplatforma_odbior_wysylka}/.env")    
 
     def virtualenv_i_instalacja_libek(self):
         self.fp.drukuj("def: virtualenv_i_instalacja_libek")
@@ -122,19 +124,19 @@ class UtrzymanieWersji():
         else:
             raise ExceptionWindows
 
-    def zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(self, basic_path_ram, basic_path_skryptu_klraspi):
+    def zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(self, basic_path_ram, basic_path_klplatforma_odbior_wysylka):
         self.fp.drukuj("def: zachomikuj_stary_env_i_usun_stary_projekt")
-        if os.path.isdir(f"{basic_path_skryptu_klraspi}") == True:
-            if os.path.exists(f"{basic_path_skryptu_klraspi}/.env"):
-                shutil.copyfile(f"{basic_path_skryptu_klraspi}/.env", ".env_skopiowany")
-            if os.path.isdir(basic_path_skryptu_klraspi):
-                shutil.rmtree(f"{basic_path_skryptu_klraspi}") 
+        if os.path.isdir(f"{basic_path_klplatforma_odbior_wysylka}") == True:
+            if os.path.exists(f"{basic_path_klplatforma_odbior_wysylka}/.env"):
+                shutil.copyfile(f"{basic_path_klplatforma_odbior_wysylka}/.env", ".env_skopiowany")
+            if os.path.isdir(basic_path_klplatforma_odbior_wysylka):
+                shutil.rmtree(f"{basic_path_klplatforma_odbior_wysylka}") 
         path_to_tymczasowy_miejsce_pobranego_programu=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}-master"
         if os.path.isdir(path_to_tymczasowy_miejsce_pobranego_programu):
-            shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_skryptu_klraspi}")
+            shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_klplatforma_odbior_wysylka}")
             shutil.rmtree(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
             os.remove(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
-            self.przekopiuj_stary_env(basic_path_skryptu_klraspi)
+            self.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
             self.virtualenv_i_instalacja_libek()
             self.fp.drukuj("usunalem stary kod i zachomikowalem .env")
         else:
@@ -237,6 +239,9 @@ def main():
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
         raise ExceptionEnvProjektu
+    except ExceptionRepository as e:
+        fp.drukuj(f"exception: {e}")
+        fp.drukuj("Wyglada na to że niespójna jest data programu miedzy repozytorium a frontend - sprawdz czy zrobiles git push --force w ostatnich zmianach")
     except ExceptionEnvProjektu as e:
         fp.drukuj(f"exception {e}")
         fp.drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
