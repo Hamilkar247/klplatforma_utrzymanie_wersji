@@ -66,7 +66,7 @@ class UtrzymanieWersji():
             with zipfile.ZipFile(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip", "r") as zip_ref:
                 zip_ref.extractall(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy")
         
-            path_commit_txt=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}_tymczasowy-master/{self.nazwa_pliku_z_data_programu}"
+            path_commit_txt=f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy/{self.klplatforma_odbior_wysylka}-master/{self.nazwa_pliku_z_data_programu}"
         except ExceptionRepository as e:
             self.fp.drukuj("program był pisany pod pobieranie zipów z githuba - w przypadku zmiany hostingu może być problem ")
             traceback.print_exc()
