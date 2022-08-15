@@ -43,38 +43,36 @@ class FunkcjePomocnicze():
     
     #########################
     
-
-    
     def file_istnienie(self, path_to_file, komunikat):
         if os.path.exists(path_to_file) == False:
             self.drukuj(f"{komunikat}")
-            raise self.exceptionEnvProjektu
+            raise ExceptionEnvProjektu
         return True
     
     def folder_istnienie(self, path_to_folder, komunikat):
         if os.path.isdir(path_to_folder) == False:
             self.drukuj(f"{komunikat}")
-            raise self.exceptionEnvProjektu
+            raise ExceptionEnvProjektu
         return True
     
     def folder_istnienie_2(self, path_to_folder, komunikat):
         if os.path.isdir(path_to_folder) == False:
             self.drukuj(f"{komunikat}")
-            raise self.exceptionNotExistFolder
+            raise ExceptionNotExistFolder
         return path_to_folder
     
     def zmienna_env_file(self, tag_in_env, komunikat):
         path_to_file=os.getenv(tag_in_env)
         if os.path.exists(path_to_file) == False:
             self.drukuj(f"{komunikat}, tag:{tag_in_env}, path:{path_to_file}")#sprawdz czy plik .env istnieje")
-            raise self.exceptionEnvProjektu
+            raise ExceptionEnvProjektu
         return path_to_file
     
     def zmienna_env_folder(self, tag_in_env, komunikat):
         path_to_folder=os.getenv(tag_in_env)
         if os.path.isdir(path_to_folder) == False:
             self.drukuj(f"{komunikat}, tag:{tag_in_env}, path:{path_to_folder}")#sprawdz czy plik .env istnieje")
-            raise self.exceptionEnvProjektu
+            raise ExceptionEnvProjektu
         return path_to_folder
     
     def usun_flare(self, folder_do_sprawdzenia, flara_do_sprawdzenia):

@@ -88,7 +88,7 @@ class UtrzymanieWersji():
     def istnienie_virtualenv(self, basic_path_skryptu_klraspi):
         self.fp.drukuj("def: istnienie_virtualenv")
         scieszka_do_virtualenvironment=f"{basic_path_skryptu_klraspi}/venv"
-        if os.isdir(scieszka_do_virtualenvironment):
+        if os.path.isdir(scieszka_do_virtualenvironment):
             self.fp.drukuj("jest venv")
             return True
         else:
