@@ -19,6 +19,9 @@ class ExceptionWindows(Exception):
 class ExceptionRepository(Exception):
     pass
 
+class ExceptionVirtualenv(Exception):
+    pass
+
 #############
 
 class FunkcjePomocnicze():

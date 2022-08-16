@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import json
 import signal
 import psutil
-from funkcje_pomocnicze import ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
+from funkcje_pomocnicze import ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
 
 #####################
 
@@ -119,8 +119,10 @@ class UtrzymanieWersji():
             bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
             process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = process.communicate()
-            self.fp.drukuj(f"stdout: {stdout}")
-            self.fp.drukuj(f"stderr: {stderr}")
+            self.fp.drukuj(f"stdout: {str(stdout)}")
+            self.fp.drukuj(f"stderr: {str(stderr)}")
+            if os.path.isdir(f"../{self.klplatforma_odbior_wysylka}/venv") == False:
+                raise ExceptionVirtualenv
         else:
             raise ExceptionWindows
 
@@ -242,6 +244,11 @@ def main():
     except ExceptionRepository as e:
         fp.drukuj(f"exception: {e}")
         fp.drukuj("Wyglada na to że niespójna jest data programu miedzy repozytorium a frontend - sprawdz czy zrobiles git push --force w ostatnich zmianach")
+        traceback.print_exc()
+        fp.usun_flare(basic_path_ram, path_preflara)
+    except ExceptionVirtualenv as e:
+        fp.drukuj(f"exception: {e}")
+        fp.drukuj("Problem z stworzeniem virtualenv venv niestety")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
     except ExceptionEnvProjektu as e:
