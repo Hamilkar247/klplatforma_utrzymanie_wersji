@@ -246,22 +246,22 @@ def main():
         fp.drukuj(f"exception: {e}")
         raise ExceptionEnvProjektu
     except ExceptionRepository as e:
-        fp.drukuj(f"exception: {e}")
+        fp.drukuj(f"exception: ExceptionRepository")
         fp.drukuj("Wyglada na to że niespójna jest data programu miedzy repozytorium a frontend - sprawdz czy zrobiles git push --force w ostatnich zmianach")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
     except ExceptionVirtualenv as e:
-        fp.drukuj(f"exception: {e}")
+        fp.drukuj(f"exception:  ExceptionVirtualenv ")
         fp.drukuj("Problem z stworzeniem virtualenv venv niestety")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
     except ExceptionEnvProjektu as e:
-        fp.drukuj(f"exception {e}")
+        fp.drukuj(f"exception ExceptionEnvProjektu")
         fp.drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
     except ExceptionWindows as e:
-        fp.drukuj(f"exception {e}")
+        fp.drukuj(f"exception ExceptionWindows")
         fp.drukuj(f"Brak wersji oprogramowania na windowsa - wymaga analizy i/lub dopisania kodu")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
