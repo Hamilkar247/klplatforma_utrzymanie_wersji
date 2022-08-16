@@ -242,6 +242,8 @@ def main():
     except ExceptionRepository as e:
         fp.drukuj(f"exception: {e}")
         fp.drukuj("Wyglada na to że niespójna jest data programu miedzy repozytorium a frontend - sprawdz czy zrobiles git push --force w ostatnich zmianach")
+        traceback.print_exc()
+        fp.usun_flare(basic_path_ram, path_preflara)
     except ExceptionEnvProjektu as e:
         fp.drukuj(f"exception {e}")
         fp.drukuj(f"czy napewno skopiowales .env_projektu.example na .env_projektu, i zmieniles tam scieszki zalezne? Tak tylko pytam...")
