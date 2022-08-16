@@ -118,7 +118,7 @@ class UtrzymanieWersji():
         if os.name == "posix":
             self.fp.drukuj(f"aktualny folder roboczy {os.getcwd()}")
             plik_bash=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh"
-            if os.path.exist(plik_bash) == True
+            if os.path.exist(plik_bash) == True:
                 bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
                 process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
