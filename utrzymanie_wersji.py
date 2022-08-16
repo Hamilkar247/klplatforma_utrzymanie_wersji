@@ -116,12 +116,16 @@ class UtrzymanieWersji():
     def virtualenv_i_instalacja_libek(self):
         self.fp.drukuj("def: virtualenv_i_instalacja_libek")
         if os.name == "posix":
-            bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
-            process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout, stderr = process.communicate()
-            self.fp.drukuj(f"stdout: {str(stdout)}")
-            self.fp.drukuj(f"stderr: {str(stderr)}")
+            self.fp.drukuj(f"aktualny folder roboczy {os.getcwd()}")
+            plik_bash=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh"
+            if os.path.exist(plik_bash) == True
+                bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
+                process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                stdout, stderr = process.communicate()
+                self.fp.drukuj(f"stdout:\n {str(stdout)}")
+                self.fp.drukuj(f"stderr:\n {str(stderr)}")
             if os.path.isdir(f"../{self.klplatforma_odbior_wysylka}/venv") == False:
+                self.fp.drukuj("no i nadal nie ma")
                 raise ExceptionVirtualenv
         else:
             raise ExceptionWindows
