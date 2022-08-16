@@ -166,6 +166,10 @@ class UtrzymanieWersji():
 
 ##################
 
+def tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara):
+    file=open(path_preflara, "w")
+    file.write(f"{os.getpid()}")
+
 def main():
     fp=FunkcjePomocnicze(nazwa_programu())
     basic_path_ram=""
@@ -205,11 +209,9 @@ def main():
                 path_preflara=f"{basic_path_ram}/utrzymanie_wersji.py.preflara"
                 if obecny_projekt==obecny_na_outsystem:
                     fp.drukuj("mamy zbieznosc ;) - nic nie robie")
-                    if os.path.exists(path_preflara) == False:
-                        file=open(path_preflara, "w")
-                        file.write(f"{os.getpid()}")
                     if uw.istnienie_virtualenv(basic_path_klplatforma_odbior_wysylka) == False:
                         uw.virtualenv_i_instalacja_libek()
+                    tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
                 elif obecny_projekt=="brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
@@ -218,8 +220,7 @@ def main():
                     text=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_klplatforma_odbior_wysylka, basic_path_ram=basic_path_ram)
                     if text != "":
                         uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
-                        file=open(path_preflara, "w")
-                        file.write(f"{os.getpid()}")
+                        tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
                     fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                     fp.drukuj("koniec elif")
                 else:
@@ -236,13 +237,13 @@ def main():
                         uw.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
                         fp.drukuj("przekopiowalem stary env")
                         fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
-                        file=open(path_preflara, "w")
-                        file.write(f"{os.getpid()}")
+                        tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
                     else:
                         fp.drukuj("brak akcji w else")
                     fp.drukuj("koniec elsa")
                 fp.drukuj("proces zakonczony") 
                 time.sleep(5*60)
+            #już poza pętlą - a więc zamykając program warto usunąć preflare programu
             fp.usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
