@@ -122,8 +122,10 @@ class UtrzymanieWersji():
                 bash_command=f"{os.getcwd()}/linux_bash_do_instalacji_libek_w_venv.sh".split()
                 process = subprocess.Popen(bash_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
-                self.fp.drukuj(f"stdout:\n {str(stdout)}")
-                self.fp.drukuj(f"stderr:\n {str(stderr)}")
+                stdout=stdout.decode("utf-8")
+                stderr=stderr.decode("utf-8")
+                self.fp.drukuj(f"stdout:\n {stdout}")
+                self.fp.drukuj(f"stderr:\n {stderr}")
             if os.path.isdir(f"../{self.klplatforma_odbior_wysylka}/venv") == False:
                 self.fp.drukuj("no i nadal nie ma")
                 raise ExceptionVirtualenv
