@@ -206,13 +206,13 @@ def main():
                 obecny_projekt=uw.zwroc_stan_projektu(basic_path_klplatforma_odbior_wysylka)
                 obecny_na_outsystem=uw.pobierz_z_outsystemu_date_wersji()
                 #preflara do umozliwienia uruchomienia sie skrypty_klraspi
-                path_preflara=f"{basic_path_ram}/utrzymanie_wersji.py.preflara"
-                if obecny_projekt==obecny_na_outsystem:
+                path_preflara=f"{basic_path_ram}/{nazwa_programu()}.preflara"
+                if obecny_projekt == obecny_na_outsystem:
                     fp.drukuj("mamy zbieznosc ;) - nic nie robie")
                     if uw.istnienie_virtualenv(basic_path_klplatforma_odbior_wysylka) == False:
                         uw.virtualenv_i_instalacja_libek()
                     tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
-                elif obecny_projekt=="brak pliku":
+                elif obecny_projekt == "brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
                     fp.drukuj("brak pliku - pierwszy raz pobieram z repa")
@@ -244,7 +244,7 @@ def main():
                 fp.drukuj("proces zakonczony") 
                 time.sleep(5*60)
             #już poza pętlą - a więc zamykając program warto usunąć preflare programu
-            fp.usun_flare(basic_path_ram, path_preflara)
+        fp.usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
         raise ExceptionEnvProjektu
