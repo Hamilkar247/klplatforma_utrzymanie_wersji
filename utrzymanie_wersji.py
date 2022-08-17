@@ -241,9 +241,10 @@ def main():
                     else:
                         fp.drukuj("brak akcji w else")
                     fp.drukuj("koniec elsa")
-                fp.drukuj("proces zakonczony") 
-                time.sleep(5*60)
-            #już poza pętlą - a więc zamykając program warto usunąć preflare programu
+            sekund=120
+            fp.drukuj(f"proces zakonczony - czekamy {120} sekund") 
+            time.sleep(sekund)
+        #już poza pętlą - a więc zamykając program warto usunąć preflare programu
         fp.usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
@@ -273,6 +274,7 @@ def main():
         fp.drukuj(f"sprawdz czy .env_projektu widziany jest menadzer zadan/crontab")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
+    fp.drukuj("koniec_programu")
 
 if __name__ == "__main__":
     main()
