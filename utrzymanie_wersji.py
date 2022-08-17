@@ -62,6 +62,7 @@ class UtrzymanieWersji():
         self.fp.drukuj("def: pobierz_aktualna_wersje")
         url_zip_code_repo=os.getenv("url_zip_code_repo")
         urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
+        path_commit_txt=""
         try: 
             with zipfile.ZipFile(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip", "r") as zip_ref:
                 zip_ref.extractall(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy")
