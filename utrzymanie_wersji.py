@@ -64,6 +64,7 @@ class UtrzymanieWersji():
         urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
         path_commit_txt=""
         try: 
+            self.fp.drukuj("otwieranie zipa")
             with zipfile.ZipFile(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip", "r") as zip_ref:
                 zip_ref.extractall(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy")
         
