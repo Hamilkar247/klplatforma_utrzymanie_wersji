@@ -176,6 +176,8 @@ def main():
     basic_path_ram=""
     basic_path_klplatforma_odbior_wysylka=""
     path_preflara=""
+    flaga_pobranie_wersji_z_repo=False
+    flaga_stworzenie_venv=False
     try:
         fp.drukuj(f"------{nazwa_programu()}--------")
         dotenv_path = "./.env_projektu"
@@ -212,7 +214,10 @@ def main():
                     fp.drukuj("mamy zbieznosc ;) - nic nie robie")
                     if uw.istnienie_virtualenv(basic_path_klplatforma_odbior_wysylka) == False:
                         uw.virtualenv_i_instalacja_libek()
+                        flaga_stworzenie_venv=True
+                    flaga_pobranie_wersji_z_repo=False
                     tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
+                    
                 elif obecny_projekt == "brak pliku":
                     if os.path.exists(path_preflara):
                         os.remove(path_preflara)
@@ -221,6 +226,8 @@ def main():
                     text=uw.pobierz_aktualna_wersje(spodziewana_data_wersji=obecny_na_outsystem, basic_path_projektu=basic_path_klplatforma_odbior_wysylka, basic_path_ram=basic_path_ram)
                     if text != "":
                         uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
+                        flaga_stworzenie_venv=True
+                        flaga_pobranie_wersji_z_repo=True
                         tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
                     fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                     fp.drukuj("koniec elif")
@@ -239,10 +246,17 @@ def main():
                         fp.drukuj("przekopiowalem stary env")
                         fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
                         tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
+                        flaga_stworzenie_venv=True
+                        flaga_pobranie_wersji_z_repo=True
                     else:
                         fp.drukuj("brak akcji w else")
                     fp.drukuj("koniec elsa")
             sekund=120
+            with open(f"{basic_path_ram}/sprawdzanie_repa.log", "a") as spr_repa_logi:
+                spr_repa_logi.write(f"------------------\n")
+                spr_repa_logi.write(f"{fp.data_i_godzina()}\n")
+                spr_repa_logi.write(f"flaga_stworzenie_venv: {flaga_stworzenie_venv}\n")
+                spr_repa_logi.write(f"flaga_pobranie_wersji_z_repa: {flaga_pobranie_wersji_z_repo}\n")
             fp.drukuj(f"proces zakonczony - czekamy {120} sekund") 
             time.sleep(sekund)
         #już poza pętlą - a więc zamykając program warto usunąć preflare programu
