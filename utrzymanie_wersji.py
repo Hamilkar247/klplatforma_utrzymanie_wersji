@@ -210,6 +210,7 @@ def main():
                 obecny_projekt=uw.zwroc_stan_projektu(basic_path_klplatforma_odbior_wysylka)
                 obecny_na_outsystem=uw.pobierz_z_outsystemu_date_wersji()
                 #preflara do umozliwienia uruchomienia sie skrypty_klraspi
+                fp.drukuj(f"obecny_na_outsystem: {obecny_na_outsystem}")
                 path_preflara=f"{basic_path_ram}/{nazwa_programu()}.preflara"
                 if obecny_projekt == obecny_na_outsystem:
                     fp.drukuj("mamy zbieznosc ;) - nic nie robie")
