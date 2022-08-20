@@ -226,7 +226,7 @@ class UtrzymanieWersji():
             docelowy_url_dla_post=os.getenv(".env_projektu")#"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/CreateMeasurement"
             #"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/RESTAPIMethod1"
             response = requests.post(
-                docelowy_url_dla_post,
+                self.docelowy_url_dla_post,
                 json=json_object,
             )
             self.fp.drukuj(f"response.txt: {response.text}")
