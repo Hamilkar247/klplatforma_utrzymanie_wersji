@@ -1,7 +1,7 @@
 from inspect import trace
 import os
 from re import L
-import sys
+import requests
 import shutil
 import subprocess
 from datetime import datetime
@@ -14,7 +14,9 @@ import json
 import signal
 import psutil
 from funkcje_pomocnicze import ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
-
+from getmac import get_mac_address as gma
+import socket
+from pytz import timezone
 #####################
 
 def nazwa_programu():
@@ -166,6 +168,137 @@ class UtrzymanieWersji():
             else:
                 raise ExceptionWindows
 
+    def operacja_wyslania_loga_serwer(self, flaga_stworzenie_venv, flaga_pobranie_wersji_z_repo):
+        flaga_stworzenie_venv=self.flaga_stworzenie_venv
+        flaga_pobranie_wersji_z_repo=self.flaga_pobranie_wersji_z_repo
+        self.wysylka_loga_na_serwer()
+
+    def wylicz_status_platform(self):
+        status=0
+        if self.flaga_stworzenie_venv==True:
+            status=status+262144 #2^18
+        if self.flaga_pobranie_wersji_z_repo==True:
+            status=status+524288 #2^19
+
+    def wysylka_loga_na_serwer(self):
+        json_data = {
+            "wersja_json": "0.8",
+            "sn_platform": self.get_mac_address(),#self.sn_platform,
+            #nie potrzebne#"sn_device_mother": self.mother_serial_number,
+            "status_platform": self.wylicz_status_platform(),
+            "zasieg_platform_wifi": "-1",
+            "bateria_platform": "-1",
+            "local_ipv4": self.getIPV4(),
+            "timezone": self.get_diff(datetime.now(), "Europe/Warsaw"),
+            "data": []
+        }
+        json_object = json.dumps(json_data, indent = 4)
+        slownik_response = self.wyslanie_obiektu_json_z_danymi(json_data)
+        #dopisac ze zalezy od OK=200
+        self.fp.drukuj(f"slownik_response: {slownik_response}")
+        self.fp.drukuj(type(slownik_response['status_code'] ))
+        self.fp.drukuj(type(slownik_response["sukces_zapisu"]))
+        path_to_json_wysylki_txt=f"json_do_wysylki.txt"
+        self.fp.drukuj(f"path_to_json_wysylki_txt: {path_to_json_wysylki_txt}")
+        with open(f"{path_to_json_wysylki_txt}", "a+") as outfile:
+            outfile.write("----------------------------")
+            outfile.write(str(self.fp.data_i_godzina()))
+            outfile.write("\n"+json_object) 
+            #drukuj(json_object)
+        if slownik_response['status_code'] == "200" and slownik_response["sukces_zapisu"] == "True":
+            with open(f"{self.basic_path_ram}/wysylka.log", "a") as logi:
+                logi.write(f"log_klplatforma\n")
+                logi.write(f"status_code:{slownik_response['status_code']}\n")
+                logi.write(f"sukces_zapisu:{slownik_response['sukces_zapisu']}\n")
+            with open(f"{self.basic_path_ram}/status.log", "a") as status_logi:
+                status_logi.write(f"------------------\n")
+                status_logi.write(f"{self.fp.data_i_godzina()}\n")
+                status_logi.write(f"{self.wylicz_status_platform()}\n")
+
+    def wyslanie_obiektu_json_z_danymi(self, json_object):
+        #shutil.copy2(self.path_plik_z_krotkami_do_wysylki_file, self.path_plik_z_krotkami_do_wysylki_file+".work")
+        #print(json_object)
+        dict_zwracany={"status_code":"0", "sukces_zapisu":"False", "error_text":"brak"}
+        try:
+            docelowy_url_dla_post=self.docelowy_url_dla_post_pomiarow#"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/CreateMeasurement"
+            #"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/RESTAPIMethod1"
+            response = requests.post(
+                docelowy_url_dla_post,
+                json=json_object,
+            )
+            self.fp.drukuj(f"response.txt: {response.text}")
+            #mogę jeszcze sprawdzać Success
+            print(f"response.status_code: {response.status_code}")
+            if response.status_code == 200:
+                self.fp.drukuj("poprawna odpowiedż serwera")
+                json_response=json.loads(response.text)
+                print(json_response)
+                dict_zwracany['status_code']="200"
+                try:
+                    if json_response["Success"] is not None:
+                        czy_sukces=json_response["Success"]
+                        if czy_sukces == True:
+                            pass
+                            print("jest")
+                        else:
+                            self.fp.drukuj(f"Success:{czy_sukces}")
+                        dict_zwracany["sukces_zapisu"]=str(f"{czy_sukces}")
+                except KeyError as e:
+                    self.fp.drukuj(f"Nie ma takiego parametru w odeslanym jsonie z outsystemu {e}")
+                    dict_zwracany["sukces_zapisu"]=str(f"{False}")
+                #plik_z_danymi=open(self.path_plik_z_krotkami_do_wysylki_file, "w")
+                #plik_z_danymi.write("")
+                #plik_z_danymi.close()
+            else:
+                self.fp.drukuj("błędna odpowiedź serwera")
+                self.fp.drukuj(f"response.status_code: {response.status_code}")
+        except urllib.error.URLError as e:
+            self.fp.drukuj(f"Problem z wyslaniem pakietu: {e}")
+            traceback.print_exc()
+        except Exception as e:
+            self.fp.drukuj("zlapałem wyjatek: {e}")
+            traceback.print_exc()
+        self.fp.drukuj(f"dict_zwracany: {type(dict_zwracany)}")
+        return dict_zwracany
+
+    def get_mac_address(self):
+        if os.name == "posix":
+            self.fp.drukuj(f"mac_address:{gma()}")
+            return gma()
+        else:
+            drukuj("brak oprogramowanego windowsa")
+            raise ExceptionWindows
+
+    #trzeba zastapic libka pythonowa by uniezaleźnić od basha
+    def getIPV4(self):
+        try:
+            str_ip="nie wyznaczono"
+            self.fp.drukuj("def: getIPV4")
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            print(s.getsockname()[0])
+            str_ip=s.getsockname()[0]
+            if str_ip is None:
+                self.fp.drukuj("nie udało się wyznaczyć numeru ip w sieci lokalnej")
+                str_ip=f"nie wyznaczono"
+                
+        except Exception as e:
+            self.fp.drukuj(f"getIPV4: wystapil blad {e}")
+            str_ip=f"nie wyznaczono"
+            traceback.print_exc()
+        return str_ip
+
+    def get_diff(self, now, tzname):
+        tz = timezone(tzname)
+        utc = timezone('UTC')
+        utc.localize(datetime.now())
+        delta =  utc.localize(now) - tz.localize(now)
+        print(delta)
+        delta=str(delta).split(":")[0]
+        delta="+"+delta
+        print(delta)
+        return delta
+
 ##################
 
 def tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara):
@@ -186,6 +319,7 @@ def main():
         load_dotenv(dotenv_path)
         # pobierz_z_outsystemu_date_wersji()
         uw=UtrzymanieWersji()
+        sekund=120
         while True:
             if os.name == "posix":
                 fp.drukuj("posix")
@@ -253,16 +387,15 @@ def main():
                     else:
                         fp.drukuj("brak akcji w else")
                     fp.drukuj("koniec elsa")
-            sekund=120
-            with open(f"{basic_path_ram}/sprawdzanie_repa.log", "a") as spr_repa_logi:
-                spr_repa_logi.write(f"------------------\n")
-                spr_repa_logi.write(f"{fp.data_i_godzina()}\n")
-                spr_repa_logi.write(f"flaga_stworzenie_venv: {flaga_stworzenie_venv}\n")
-                spr_repa_logi.write(f"flaga_pobranie_wersji_z_repa: {flaga_pobranie_wersji_z_repo}\n")
-            fp.drukuj(f"proces zakonczony - czekamy {120} sekund") 
+                with open(f"{basic_path_ram}/sprawdzanie_repa.log", "a") as spr_repa_logi:
+                    spr_repa_logi.write(f"------------------\n")
+                    spr_repa_logi.write(f"{fp.data_i_godzina()}\n")
+                    spr_repa_logi.write(f"flaga_stworzenie_venv: {flaga_stworzenie_venv}\n")
+                    spr_repa_logi.write(f"flaga_pobranie_wersji_z_repa: {flaga_pobranie_wersji_z_repo}\n")
+                uw.operacja_wyslania_loga_serwer(flaga_stworzenie_venv, flaga_pobranie_wersji_z_repo)
+                fp.drukuj(f"proces zakonczony - czekamy {sekund} sekund") 
             time.sleep(sekund)
         #już poza pętlą - a więc zamykając program warto usunąć preflare programu
-        fp.usun_flare(basic_path_ram, path_preflara)
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
         raise ExceptionEnvProjektu
