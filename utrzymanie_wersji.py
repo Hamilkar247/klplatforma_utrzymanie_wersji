@@ -201,13 +201,6 @@ class UtrzymanieWersji():
         self.fp.drukuj(f"slownik_response: {slownik_response}")
         self.fp.drukuj(type(slownik_response['status_code'] ))
         self.fp.drukuj(type(slownik_response["sukces_zapisu"]))
-        path_to_json_wysylki_txt=f"{os.getcwd()}/json_do_wysylki.txt"
-        self.fp.drukuj(f"path_to_json_wysylki_txt: {path_to_json_wysylki_txt}")
-        with open(f"{path_to_json_wysylki_txt}", "a") as outfile:
-            outfile.write("----------------------------")
-            outfile.write(str(self.fp.data_i_godzina()))
-            outfile.write("\n"+json_object) 
-            #drukuj(json_object)
         if slownik_response['status_code'] == "200" and slownik_response["sukces_zapisu"] == "True":
             with open(f"{self.basic_path_ram}/wysylka.log", "a") as logi:
                 logi.write(f"log_klplatforma\n")
@@ -247,9 +240,6 @@ class UtrzymanieWersji():
                 except KeyError as e:
                     self.fp.drukuj(f"Nie ma takiego parametru w odeslanym jsonie z outsystemu {e}")
                     dict_zwracany["sukces_zapisu"]=str(f"{False}")
-                #plik_z_danymi=open(self.path_plik_z_krotkami_do_wysylki_file, "w")
-                #plik_z_danymi.write("")
-                #plik_z_danymi.close()
             else:
                 self.fp.drukuj("błędna odpowiedź serwera")
                 self.fp.drukuj(f"response.status_code: {response.status_code}")
