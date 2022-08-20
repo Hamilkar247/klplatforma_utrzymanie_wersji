@@ -169,8 +169,8 @@ class UtrzymanieWersji():
                 raise ExceptionWindows
 
     def operacja_wyslania_loga_serwer(self, flaga_stworzenie_venv, flaga_pobranie_wersji_z_repo):
-        flaga_stworzenie_venv=self.flaga_stworzenie_venv
-        flaga_pobranie_wersji_z_repo=self.flaga_pobranie_wersji_z_repo
+        self.flaga_stworzenie_venv=flaga_stworzenie_venv
+        self.flaga_pobranie_wersji_z_repo=flaga_pobranie_wersji_z_repo
         self.wysylka_loga_na_serwer()
 
     def wylicz_status_platform(self):
