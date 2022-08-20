@@ -201,9 +201,9 @@ class UtrzymanieWersji():
         self.fp.drukuj(f"slownik_response: {slownik_response}")
         self.fp.drukuj(type(slownik_response['status_code'] ))
         self.fp.drukuj(type(slownik_response["sukces_zapisu"]))
-        path_to_json_wysylki_txt=f"json_do_wysylki.txt"
+        path_to_json_wysylki_txt=f"{os.getcwd()}/json_do_wysylki.txt"
         self.fp.drukuj(f"path_to_json_wysylki_txt: {path_to_json_wysylki_txt}")
-        with open(f"{path_to_json_wysylki_txt}", "a+") as outfile:
+        with open(f"{path_to_json_wysylki_txt}", "a") as outfile:
             outfile.write("----------------------------")
             outfile.write(str(self.fp.data_i_godzina()))
             outfile.write("\n"+json_object) 
