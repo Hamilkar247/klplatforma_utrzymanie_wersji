@@ -39,6 +39,7 @@ class UtrzymanieWersji():
         self.url_wersji_programu=os.getenv("url_wersja_programu")
         self.docelowy_url_dla_logow=os.getenv("docelowy_url_dla_logow")
         self.url_zip_code_repo=os.getenv("url_zip_code_repo")
+        self.basic_path_ram=os.getenv("basic_path_ram")
 
     def pobierz_z_outsystemu_date_wersji(self):
         self.fp.drukuj("def: pobierz_z_outsystemu_date_wersji")
