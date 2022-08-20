@@ -223,10 +223,8 @@ class UtrzymanieWersji():
         #print(json_object)
         dict_zwracany={"status_code":"0", "sukces_zapisu":"False", "error_text":"brak"}
         try:
-            docelowy_url_dla_post=os.getenv(".env_projektu")#"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/CreateMeasurement"
-            #"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/RESTAPIMethod1"
             response = requests.post(
-                self.docelowy_url_dla_post,
+                self.docelowy_url_dla_logow,
                 json=json_object,
             )
             self.fp.drukuj(f"response.txt: {response.text}")
