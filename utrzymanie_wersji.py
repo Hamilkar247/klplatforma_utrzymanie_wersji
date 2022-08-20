@@ -36,14 +36,17 @@ class UtrzymanieWersji():
         #self.klplatforma_odbior_wysylka_tymczasowy="klplatforma_odbior_wysylka_tymczasowy"
         self.nazwa_pliku_z_data_programu="commit.txt"
 
+        self.url_wersji_programu=os.getenv("url_wersja_programu")
+        self.docelowy_url_dla_logow=os.getenv("docelowy_url_dla_logow")
+        self.url_zip_code_repo=os.getenv("url_zip_code_repo")
+
     def pobierz_z_outsystemu_date_wersji(self):
         self.fp.drukuj("def: pobierz_z_outsystemu_date_wersji")
-        url_wersji_programu=os.getenv("url_wersja_programu")
         content_new=[]
         data=""
         #przykladowy docelowy url https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/ProgramSettings
         try:
-            with urllib.request.urlopen(url_wersji_programu) as url:
+            with urllib.request.urlopen(self.url_wersji_programu) as url:
                 content_new = json.loads(url.read()) #json.dumps(json.loads(url.read()), indent=2) #json.loads(url.read())
             print(content_new)
             #print(content_new[0])
@@ -55,15 +58,15 @@ class UtrzymanieWersji():
         except Exception as e:
             self.fp.drukuj(f"EEEEEEEEEERRRRRROOOOOOOORRRR")
             self.fp.drukuj(f"exception {e}")
-            self.fp.drukuj(f"sprawdz link: {url_wersji_programu}")
+            self.fp.drukuj(f"sprawdz link: {self.url_wersji_programu}")
             traceback.print_exc()
         return data
         #return "03/08/22 12:07:09"
     
     def pobierz_aktualna_wersje(self, spodziewana_data_wersji, basic_path_projektu, basic_path_ram):
         self.fp.drukuj("def: pobierz_aktualna_wersje")
-        url_zip_code_repo=os.getenv("url_zip_code_repo")
-        urllib.request.urlretrieve(url_zip_code_repo, f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
+
+        urllib.request.urlretrieve(self.url_zip_code_repo, f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
         path_commit_txt=""
         try: 
             self.fp.drukuj("otwieranie zipa")
@@ -220,7 +223,7 @@ class UtrzymanieWersji():
         #print(json_object)
         dict_zwracany={"status_code":"0", "sukces_zapisu":"False", "error_text":"brak"}
         try:
-            docelowy_url_dla_post=self.docelowy_url_dla_post_pomiarow#"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/CreateMeasurement"
+            docelowy_url_dla_post=os.getenv(".env_projektu")#"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/CreateMeasurement"
             #"https://personal-5ndvfcym.outsystemscloud.com/KlimaLog_core/rest/V1/RESTAPIMethod1"
             response = requests.post(
                 docelowy_url_dla_post,
