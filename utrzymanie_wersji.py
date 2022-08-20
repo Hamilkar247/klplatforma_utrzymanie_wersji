@@ -90,7 +90,6 @@ class UtrzymanieWersji():
                 self.fp.drukuj(f"spodziewana_data_wersji==commit_data: {spodziewana_data_wersji}=={commit_data} - a więc zwracam nic" )
                 self.fp.drukuj("UWAGA czy napewno wypchnąłeś danem git push --force na repo? wyglada na niespojnosci daty settingsie programu na frontendzie z  ")
                 raise ExceptionRepository
-                return ""
         else:
             self.fp.drukuj(f"nie ma pliku w scieszce {path_commit_txt} - zwracam nic")
         return ""
@@ -173,16 +172,21 @@ class UtrzymanieWersji():
                 raise ExceptionWindows
 
     def operacja_wyslania_loga_serwer(self, flaga_stworzenie_venv, flaga_pobranie_wersji_z_repo):
+        self.fp.drukuj("def: operacja_wyslania_logo_serwer")
+        self.fp.drukuj(f"{flaga_stworzenie_venv} {flaga_pobranie_wersji_z_repo}")
         self.flaga_stworzenie_venv=flaga_stworzenie_venv
         self.flaga_pobranie_wersji_z_repo=flaga_pobranie_wersji_z_repo
         self.wysylka_loga_na_serwer()
 
     def wylicz_status_platform(self):
+        self.fp.drukuj(f"def: wylicz_status_platform")
+        self.fp.drukuj(f"{self.flaga_stworzenie_venv} {self.flaga_pobranie_wersji_z_repo}")
         status=0
         if self.flaga_stworzenie_venv==True:
             status=status+262144 #2^18
         if self.flaga_pobranie_wersji_z_repo==True:
             status=status+524288 #2^19
+        return str(status)
 
     def wysylka_loga_na_serwer(self):
         json_data = {
@@ -196,6 +200,7 @@ class UtrzymanieWersji():
             "timezone": self.get_diff(datetime.now(), "Europe/Warsaw"),
             "data": []
         }
+
         json_object = json.dumps(json_data, indent = 4)
         slownik_response = self.wyslanie_obiektu_json_z_danymi(json_data)
         #dopisac ze zalezy od OK=200
