@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import json
 import signal
 import psutil
-from funkcje_pomocnicze import ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
+from funkcje_pomocnicze import ExceptionExistInstanceOfProgram, ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
 from getmac import get_mac_address as gma
 import socket
 from pytz import timezone
@@ -317,26 +317,38 @@ def main():
         # pobierz_z_outsystemu_date_wersji()
         uw=UtrzymanieWersji()
         sekund=120
+        basic_path_ram=os.getenv("basic_path_ram")
+        if basic_path_ram == "":
+            raise ExceptionEnvProjektu
+        fp.drukuj(f"ahjo - basic_path_ram {basic_path_ram}")
+        head, tail = os.path.split(basic_path_ram)
+        if os.path.isdir(head) == True:
+            if os.path.isdir(basic_path_ram) == False:
+                os.mkdir(basic_path_ram)
+                fp.drukuj(f"stworzylem folder {basic_path_ram}")
+        else:
+            fp.drukuj("sprawdz basic_path_ram")
+            raise ExceptionEnvProjektu
+        path_preflara=f"{basic_path_ram}/{nazwa_programu()}.preflara"
+        if os.path.isfile(path_preflara) == True: 
+            fp.drukuj("flara skryptu już istnieje")
+            with open(path_preflara, "r") as file:
+                linie=file.readline()
+            pid=int(linie)
+            fp.drukuj(f"pid numer tego skryptu {pid}")
+            czydziała=fp.sprawdz_czy_program_o_tym_pid_dziala(pid)
+            if czydziała == True:
+                raise ExceptionExistInstanceOfProgram
+            else:
+                os.remove(os.remove(path_preflara))
+        basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
+        head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
+        if os.path.isdir(head) == False:
+            fp.drukuj(f"basic_path_klplatforma_odbior_wysylka - head: {head}")
+            raise ExceptionEnvProjektu
         while True:
             if os.name == "posix":
                 fp.drukuj("posix")
-                basic_path_ram=os.getenv("basic_path_ram")
-                if basic_path_ram == "":
-                    raise ExceptionEnvProjektu
-                fp.drukuj(f"ahjo - basic_path_ram {basic_path_ram}")
-                head, tail = os.path.split(basic_path_ram)
-                if os.path.isdir(head) == True:
-                    if os.path.isdir(basic_path_ram) == False:
-                        os.mkdir(basic_path_ram)
-                        fp.drukuj(f"stworzylem folder {basic_path_ram}")
-                else:
-                    fp.drukuj("sprawdz basic_path_ram")
-                    raise ExceptionEnvProjektu
-                basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
-                head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
-                if os.path.isdir(head) == False:
-                    fp.drukuj(f"basic_path_klplatforma_odbior_wysylka - head: {head}")
-                    raise ExceptionEnvProjektu
                 #pobierz_aktualna_wersje()
                 obecny_projekt=uw.zwroc_stan_projektu(basic_path_klplatforma_odbior_wysylka)
                 obecny_na_outsystem=uw.pobierz_z_outsystemu_date_wersji()
@@ -393,8 +405,14 @@ def main():
                 fp.drukuj(f"proces zakonczony - czekamy {sekund} sekund") 
             time.sleep(sekund)
         #już poza pętlą - a więc zamykając program warto usunąć preflare programu
+    except ExceptionExistInstanceOfProgram as e:
+        fp.drukuj(f"exception: ExceptionExistInstanceOfProgram")
+        fp.drukuj("uruchominy już jest program utrzymanbie_wersji.py, i jego pid wydaje się działać")
+        fp.drukuj("kończe program i nie kasuje preflary programu")
+        traceback.print_exc()
     except TypeError as e:
         fp.drukuj(f"exception: {e}")
+        traceback.print_exc()
         raise ExceptionEnvProjektu
     except ExceptionRepository as e:
         fp.drukuj(f"exception: ExceptionRepository")
