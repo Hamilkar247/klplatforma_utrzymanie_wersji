@@ -40,7 +40,7 @@ class FunkcjePomocnicze():
     
     def drukuj(self, obiekt_do_wydruku):
         try:
-            print(self.data_i_godzina()+" "+self.nazwa_programu+" "+str(obiekt_do_wydruku))
+            print(self.data_i_godzina()+f" pid:{os.getpid()} "+self.nazwa_programu+" "+str(obiekt_do_wydruku))
         except Exception as e:
             print(e)
             print(traceback.print_exc())
