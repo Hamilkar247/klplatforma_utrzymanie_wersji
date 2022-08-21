@@ -340,7 +340,7 @@ def main():
             if czydziała == True:
                 raise ExceptionExistInstanceOfProgram
             else:
-                os.remove(os.remove(path_preflara))
+                os.remove(path_preflara)
         basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
         head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
         if os.path.isdir(head) == False:
