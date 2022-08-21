@@ -99,16 +99,16 @@ class FunkcjePomocnicze():
     def sprawdz_czy_program_o_tym_pid_dziala(self, pid):
         pid = 0
         if psutil.pid_exists(pid):
-            self.fp.drukuj("a process with pid %d exists" % pid)
+            self.drukuj("a process with pid %d exists" % pid)
             return
         else:
-            self.fp.drukuj("a process with pid %d does not exist" % pid)
+            self.drukuj("a process with pid %d does not exist" % pid)
         try:
-            self.fp.drukuj("sprawdz_program_o_tym_numerze_pid")
+            self.drukuj("sprawdz_program_o_tym_numerze_pid")
             os.kill(pid, 0) # 0 doesn't send any signal, but does error checks
         except OSError:
-            self.fp.drukuj("False")
+            self.drukuj("False")
             return False #print("Proc exited")
         else:
-            self.fp.drukuj("True")
+            self.drukuj("True")
             return True  #print("Proc is still running")
