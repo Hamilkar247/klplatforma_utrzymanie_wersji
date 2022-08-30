@@ -23,15 +23,16 @@ class ExceptionRepository(Exception):
 class ExceptionVirtualenv(Exception):
     pass
 
-class ExceptionExistInstanceOfProgram(Exception):
+class ExceptionExistInstanceOfProcess(Exception):
     pass
 
 #############
 
 class FunkcjePomocnicze():
 
-    def __init__(self, nazwa_programu):
+    def __init__(self, nazwa_programu, czy_drukuj=True):
         self.nazwa_programu=nazwa_programu
+        self.czy_drukuj=czy_drukuj
 
     def data_i_godzina(self):
         now = datetime.now()
@@ -40,7 +41,8 @@ class FunkcjePomocnicze():
     
     def drukuj(self, obiekt_do_wydruku):
         try:
-            print(self.data_i_godzina()+f" pid:{os.getpid()} "+self.nazwa_programu+" "+str(obiekt_do_wydruku))
+            if self.czy_drukuj==True:
+                print(self.data_i_godzina()+f" pid:{os.getpid()}  "+self.nazwa_programu+" "+str(obiekt_do_wydruku))
         except Exception as e:
             print(e)
             print(traceback.print_exc())
@@ -95,7 +97,7 @@ class FunkcjePomocnicze():
         flara_file=open(flara_path, "w")
         flara_file.write(f"{str(os.getpid())}")
         flara_file.close()
-    
+
     def sprawdz_czy_program_o_tym_pid_dziala(self, pid):
         if psutil.pid_exists(pid):
             self.drukuj("a process with pid %d exists" % pid)

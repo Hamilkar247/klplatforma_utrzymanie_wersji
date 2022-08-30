@@ -221,6 +221,7 @@ class UtrzymanieWersji():
         #shutil.copy2(self.path_plik_z_krotkami_do_wysylki_file, self.path_plik_z_krotkami_do_wysylki_file+".work")
         #print(json_object)
         dict_zwracany={"status_code":"0", "sukces_zapisu":"False", "error_text":"brak"}
+        self.fp.drukuj(self.docelowy_url_dla_logow)
         try:
             response = requests.post(
                 self.docelowy_url_dla_logow,
@@ -249,6 +250,9 @@ class UtrzymanieWersji():
             else:
                 self.fp.drukuj("błędna odpowiedź serwera")
                 self.fp.drukuj(f"response.status_code: {response.status_code}")
+        except requests.exceptions.MissingSchema as e:
+            self.fp.drukuj(f"Problem z linkiem do wyslania {e}")
+            self.fp.drukuj(f"Prawdopodobnie coś z linkiem jest nietak sprawdz self.docelowy_url_dla_logow: {self.docelowy_url_dla_logow}")
         except urllib.error.URLError as e:
             self.fp.drukuj(f"Problem z wyslaniem pakietu: {e}")
             traceback.print_exc()
