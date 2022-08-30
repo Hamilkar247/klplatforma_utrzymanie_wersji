@@ -32,9 +32,15 @@ class UtrzymanieWersji():
     def __init__(self):
         self.fp=funkcje_pomocnicze_inicjalizacja()
         
+
+
         self.klplatforma_odbior_wysylka="klplatforma_odbior_wysylka"
         #self.klplatforma_odbior_wysylka_tymczasowy="klplatforma_odbior_wysylka_tymczasowy"
         self.nazwa_pliku_z_data_programu="commit.txt"
+
+
+        dotenv_path = "./.env_projektu"
+        load_dotenv(dotenv_path)
 
         self.url_wersji_programu=os.getenv("url_wersja_programu")
         self.docelowy_url_dla_logow=os.getenv("docelowy_url_dla_logow")
@@ -221,7 +227,7 @@ class UtrzymanieWersji():
         #shutil.copy2(self.path_plik_z_krotkami_do_wysylki_file, self.path_plik_z_krotkami_do_wysylki_file+".work")
         #print(json_object)
         dict_zwracany={"status_code":"0", "sukces_zapisu":"False", "error_text":"brak"}
-        self.fp.drukuj(self.docelowy_url_dla_logow)
+        self.fp.drukuj(f"self.docelowy_url_dla_logow: {self.docelowy_url_dla_logow}")
         try:
             response = requests.post(
                 self.docelowy_url_dla_logow,
@@ -319,6 +325,8 @@ def main():
         fp.file_istnienie(dotenv_path, "dotenv_path - sprawdz .env_projektu")
         load_dotenv(dotenv_path)
         # pobierz_z_outsystemu_date_wersji()
+        #print(os.getenv("docelowy_url_dla_logow"))
+        #fp.przerwij_i_wyswietl_czas()
         uw=UtrzymanieWersji()
         sekund=120
         basic_path_ram=os.getenv("basic_path_ram")
