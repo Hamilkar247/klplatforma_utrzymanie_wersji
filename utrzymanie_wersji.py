@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import json
 import signal
 import psutil
-from funkcje_pomocnicze import ExceptionExistInstanceOfProgram, ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
+from funkcje_pomocnicze import ExceptionExistInstanceOfProcess, ExceptionVirtualenv, ExceptionRepository, FunkcjePomocnicze, ExceptionWindows, ExceptionNotExistFolder, ExceptionEnvProjektu
 from getmac import get_mac_address as gma
 import socket
 from pytz import timezone
@@ -342,7 +342,7 @@ def main():
             fp.drukuj(f"pid numer tego skryptu {pid}")
             czydziała=fp.sprawdz_czy_program_o_tym_pid_dziala(pid)
             if czydziała == True:
-                raise ExceptionExistInstanceOfProgram
+                raise ExceptionExistInstanceOfProcess
             else:
                 os.remove(path_preflara)
         basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
@@ -409,7 +409,7 @@ def main():
                 fp.drukuj(f"proces zakonczony - czekamy {sekund} sekund") 
             time.sleep(sekund)
         #już poza pętlą - a więc zamykając program warto usunąć preflare programu
-    except ExceptionExistInstanceOfProgram as e:
+    except ExceptionExistInstanceOfProcess as e:
         fp.drukuj(f"exception: ExceptionExistInstanceOfProgram")
         fp.drukuj("uruchominy już jest program utrzymanbie_wersji.py, i jego pid wydaje się działać")
         fp.drukuj("kończe program i nie kasuje preflary programu")
