@@ -322,8 +322,11 @@ def main():
     try:
         fp.drukuj(f"------{nazwa_programu()}--------")
         dotenv_path = "./.env_projektu"
-        fp.file_istnienie(dotenv_path, "dotenv_path - sprawdz .env_projektu")
-        load_dotenv(dotenv_path)
+        if os.path.exists(dotenv_path):
+            load_dotenv(dotenv_path)
+        else:
+            fp.drukuj("nie udalo sie zaladowac enva - wez ogarnij go dobra?!")
+            raise ExceptionEnvProjektu
         # pobierz_z_outsystemu_date_wersji()
         #print(os.getenv("docelowy_url_dla_logow"))
         #fp.przerwij_i_wyswietl_czas()
@@ -334,8 +337,10 @@ def main():
             raise ExceptionEnvProjektu
         fp.drukuj(f"ahjo - basic_path_ram {basic_path_ram}")
         head, tail = os.path.split(basic_path_ram)
+        fp.drukuj("czy tworzyc /run/user/1000/TermoHigroLightlog folder?")
         if os.path.isdir(head) == True:
             if os.path.isdir(basic_path_ram) == False:
+                fp.drukuj("tworzymy")
                 os.mkdir(basic_path_ram)
                 fp.drukuj(f"stworzylem folder {basic_path_ram}")
         else:
