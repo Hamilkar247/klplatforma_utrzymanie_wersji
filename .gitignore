@@ -2,3 +2,4 @@ skrypty_klraspi*
 .env_projektu
 .env_skopiowany
 __pycache__
+*.old
