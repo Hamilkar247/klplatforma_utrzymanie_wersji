@@ -321,7 +321,7 @@ def main():
     flaga_stworzenie_venv=False
     try:
         fp.drukuj(f"------{nazwa_programu()}--------")
-        dotenv_path = ".env_projektu"
+        dotenv_path = "../env_programu"
         if os.path.exists(dotenv_path):
             load_dotenv(dotenv_path)
         else:
@@ -406,7 +406,7 @@ def main():
                         uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
                         uw.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
                         fp.drukuj("przekopiowalem stary env")
-                        fp.drukuj("sprawdz .env w nowo pobranym projekcie - nie bylo go pierwotnie")
+                        fp.drukuj("sprawdz env_programu w nowo pobranym projekcie - nie bylo go pierwotnie")
                         tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
                         flaga_stworzenie_venv=True
                         flaga_pobranie_wersji_z_repo=True
@@ -453,7 +453,7 @@ def main():
         fp.usun_flare(basic_path_ram, path_preflara)
     except Exception as e:
         fp.drukuj(f"exception {e}")
-        fp.drukuj(f"sprawdz czy .env_projektu widziany jest menadzer zadan/crontab")
+        fp.drukuj(f"sprawdz czy env_programu widziany jest menadzer zadan/crontab")
         traceback.print_exc()
         fp.usun_flare(basic_path_ram, path_preflara)
     fp.drukuj("koniec_programu")
