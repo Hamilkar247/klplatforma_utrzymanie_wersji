@@ -321,7 +321,7 @@ def main():
     flaga_stworzenie_venv=False
     try:
         fp.drukuj(f"------{nazwa_programu()}--------")
-        dotenv_path = "./.env_projektu"
+        dotenv_path = ".env_projektu"
         if os.path.exists(dotenv_path):
             load_dotenv(dotenv_path)
         else:
