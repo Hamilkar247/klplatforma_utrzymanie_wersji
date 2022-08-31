@@ -327,9 +327,6 @@ def main():
         else:
             fp.drukuj("nie udalo sie zaladowac enva 'env_programu -- wez ogarnij go dobra?!")
             raise ExceptionEnvProjektu
-        # pobierz_z_outsystemu_date_wersji()
-        #print(os.getenv("docelowy_url_dla_logow"))
-        #fp.przerwij_i_wyswietl_czas()
         uw=UtrzymanieWersji()
         sekund=120
         basic_path_ram=os.getenv("basic_path_ram")
@@ -339,12 +336,13 @@ def main():
         head, tail = os.path.split(basic_path_ram)
         fp.drukuj("czy tworzyc /run/user/1000/TermoHigroLightlog folder?")
         if os.path.isdir(basic_path_ram) == False:
-            fp.drukuj("tworzymy")
-            os.makedirs(basic_path_ram)
-            fp.drukuj(f"stworzylem folder {basic_path_ram}")
-        else:
-            fp.drukuj("sprawdz basic_path_ram")
-            raise ExceptionEnvProjektu
+            try:
+                fp.drukuj("tworzymy")
+                os.makedirs(basic_path_ram)
+                fp.drukuj(f"stworzylem folder {basic_path_ram}")
+            except Exception as e: 
+                fp.drukuj("sprawdz basic_path_ram")
+                raise ExceptionEnvProjektu
         path_preflara=f"{basic_path_ram}/{nazwa_programu()}.preflara"
         if os.path.isfile(path_preflara) == True: 
             fp.drukuj("flara skryptu już istnieje")
