@@ -1,6 +1,5 @@
 from inspect import trace
 import os
-from re import L
 import requests
 import shutil
 import subprocess
@@ -37,10 +36,6 @@ class UtrzymanieWersji():
         self.klplatforma_odbior_wysylka="klplatforma_odbior_wysylka"
         #self.klplatforma_odbior_wysylka_tymczasowy="klplatforma_odbior_wysylka_tymczasowy"
         self.nazwa_pliku_z_data_programu="commit.txt"
-
-
-        dotenv_path = "./.env_projektu"
-        load_dotenv(dotenv_path)
 
         self.url_wersji_programu=os.getenv("url_wersja_programu")
         self.docelowy_url_dla_logow=os.getenv("docelowy_url_dla_logow")
@@ -121,10 +116,10 @@ class UtrzymanieWersji():
             self.fp.drukuj("nie ma venva - trzeba go stworzyc")
             return False
 
-    def przekopiuj_stary_env(self, basic_path_klplatforma_odbior_wysylka):
-        self.fp.drukuj("def: przekopiuj_stary_env - UWAGA to chwile trwa")
-        if os.path.exists(".env_skopiowany"):
-            shutil.copyfile(".env_skopiowany", f"{basic_path_klplatforma_odbior_wysylka}/.env")    
+   # def przekopiuj_stary_env(self, basic_path_klplatforma_odbior_wysylka):
+   #     self.fp.drukuj("def: przekopiuj_stary_env - UWAGA to chwile trwa")
+   #     if os.path.exists(".env_skopiowany"):
+   #         shutil.copyfile(".env_skopiowany", f"{basic_path_klplatforma_odbior_wysylka}/.env")    
 
     def virtualenv_i_instalacja_libek(self):
         self.fp.drukuj("def: virtualenv_i_instalacja_libek")
@@ -157,7 +152,7 @@ class UtrzymanieWersji():
             shutil.move(path_to_tymczasowy_miejsce_pobranego_programu, f"{basic_path_klplatforma_odbior_wysylka}")
             shutil.rmtree(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}_tymczasowy") #usuwa juz pusty folder - zawartosc zostala juz przeniesiona
             os.remove(f"{basic_path_ram}/{self.klplatforma_odbior_wysylka}.zip")
-            self.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
+            #self.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
             self.virtualenv_i_instalacja_libek()
             self.fp.drukuj("usunalem stary kod i zachomikowalem .env")
         else:
@@ -401,7 +396,7 @@ def main():
                     if wersja_na_outsystemie != "":
                         fp.drukuj("akcja w else")
                         uw.zachomikuj_stary_env_i_usun_stary_projekt_przenies_nowy_w_jego_miejsce(basic_path_ram, basic_path_klplatforma_odbior_wysylka)
-                        uw.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
+                        #uw.przekopiuj_stary_env(basic_path_klplatforma_odbior_wysylka)
                         fp.drukuj("przekopiowalem stary env")
                         fp.drukuj("sprawdz env_programu w nowo pobranym projekcie - nie bylo go pierwotnie")
                         tworze_flare_na_znak_ze_mozna_uruchamiac_program(path_preflara)
