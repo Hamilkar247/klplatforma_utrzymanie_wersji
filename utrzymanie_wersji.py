@@ -325,7 +325,7 @@ def main():
         if os.path.exists(dotenv_path):
             load_dotenv(dotenv_path)
         else:
-            fp.drukuj("nie udalo sie zaladowac enva - wez ogarnij go dobra?!")
+            fp.drukuj("nie udalo sie zaladowac enva 'env_programu -- wez ogarnij go dobra?!")
             raise ExceptionEnvProjektu
         # pobierz_z_outsystemu_date_wersji()
         #print(os.getenv("docelowy_url_dla_logow"))
@@ -338,11 +338,10 @@ def main():
         fp.drukuj(f"ahjo - basic_path_ram {basic_path_ram}")
         head, tail = os.path.split(basic_path_ram)
         fp.drukuj("czy tworzyc /run/user/1000/TermoHigroLightlog folder?")
-        if os.path.isdir(head) == True:
-            if os.path.isdir(basic_path_ram) == False:
-                fp.drukuj("tworzymy")
-                os.mkdir(basic_path_ram)
-                fp.drukuj(f"stworzylem folder {basic_path_ram}")
+        if os.path.isdir(basic_path_ram) == False:
+            fp.drukuj("tworzymy")
+            os.makedirs(basic_path_ram)
+            fp.drukuj(f"stworzylem folder {basic_path_ram}")
         else:
             fp.drukuj("sprawdz basic_path_ram")
             raise ExceptionEnvProjektu
@@ -358,7 +357,7 @@ def main():
                 raise ExceptionExistInstanceOfProcess
             else:
                 os.remove(path_preflara)
-        basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_klplatforma_odbior_wysylka")
+        basic_path_klplatforma_odbior_wysylka=os.getenv("basic_path_project")
         head, tail = os.path.split(basic_path_klplatforma_odbior_wysylka)
         if os.path.isdir(head) == False:
             fp.drukuj(f"basic_path_klplatforma_odbior_wysylka - head: {head}")
@@ -428,7 +427,7 @@ def main():
         fp.drukuj("kończe program i nie kasuje preflary programu")
         traceback.print_exc()
     except TypeError as e:
-        fp.drukuj(f"exception: {e}")
+        fp.drukuj(f"TypeError: {e}")
         traceback.print_exc()
         raise ExceptionEnvProjektu
     except ExceptionRepository as e:
